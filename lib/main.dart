@@ -3,8 +3,11 @@ import 'package:e_commerce_flutter_app/features/ui/auth/login_screen/login_scree
 import 'package:e_commerce_flutter_app/features/ui/auth/register_screen/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'config/di.dart';
+
 
 void main() {
+  configureDependencies();
   runApp(const MyApp());
 }
 

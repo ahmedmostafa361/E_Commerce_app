@@ -1,8 +1,8 @@
-class LoginRequestDto {
+class LoginRequest {
   final String? email;
   final String? password;
 
-  LoginRequestDto ({
+  LoginRequest ({
     this.email,
     this.password,
   });
