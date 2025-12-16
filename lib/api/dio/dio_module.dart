@@ -6,40 +6,35 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 @module
 abstract class GetItModule {
-  @singleton
-  // @injectable
-  BaseOptions provideBaseOptions() {
-    return BaseOptions(
-      baseUrl: EndPoints.baseUrl,
-      receiveDataWhenStatusError: true,
-      connectTimeout: Duration(seconds: 15),
-      receiveTimeout: Duration(seconds: 15),
-    );
-  }
 
   @singleton
-  // @injectable
-  PrettyDioLogger providePrettyDioLogger() {
-    return PrettyDioLogger(
-      requestBody: true,
-      responseBody: true,
-      requestHeader: true,
-      responseHeader: true,
-      request: true,
-      error: true,
-    );
-  }
+  BaseOptions provideBaseOptions() => BaseOptions(
+    baseUrl: EndPoints.baseUrl,
+    receiveDataWhenStatusError: true,
+    connectTimeout: const Duration(seconds: 15),
+    receiveTimeout: const Duration(seconds: 15),
+  );
 
   @singleton
-  // @injectable
-  Dio provideDio(BaseOptions baseOptions,PrettyDioLogger prettyDioLogger){
-    var dio = Dio(baseOptions);
-    // todo : add interceptors
+  PrettyDioLogger providePrettyDioLogger() => PrettyDioLogger(
+    requestBody: true,
+    responseBody: true,
+    requestHeader: true,
+    responseHeader: true,
+    request: true,
+    error: true,
+  );
+
+  @singleton
+  Dio provideDio(
+      BaseOptions baseOptions,
+      PrettyDioLogger prettyDioLogger,
+      ) {
+    final dio = Dio(baseOptions);
     dio.interceptors.add(prettyDioLogger);
     return dio;
   }
 
   @singleton
-  // @injectable
   ApiServices provideApiServices(Dio dio) => ApiServices(dio);
 }
