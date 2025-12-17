@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:e_commerce_flutter_app/api/api_services.dart';
 import 'package:e_commerce_flutter_app/api/end_points.dart';
+import 'package:e_commerce_flutter_app/core/exceptions/dio_interceptors.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
@@ -31,6 +32,7 @@ abstract class GetItModule {
       PrettyDioLogger prettyDioLogger,
       ) {
     final dio = Dio(baseOptions);
+    dio.interceptors.add(DioInterceptors());
     dio.interceptors.add(prettyDioLogger);
     return dio;
   }
