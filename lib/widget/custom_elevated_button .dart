@@ -29,10 +29,11 @@ class CustomElevatedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     return ElevatedButton(
+
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         padding: padding ?? EdgeInsets.symmetric(vertical: height * 0.018),
-        backgroundColor: backgroundColor ?? AppColors.darkBlueColor,
+        backgroundColor: backgroundColor ?? AppColors.whiteColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadiusGeometry.circular(16),
           side: BorderSide(
@@ -44,7 +45,7 @@ class CustomElevatedButton extends StatelessWidget {
       ),
       child: hasIcon
           ? customInButton
-          : Text(text ?? '', style: textStyle ?? AppTextStyle.normal20White),
+          : Text(text ?? '', style: textStyle ?? AppTextStyle.button20Blue),
     );
   }
 }
