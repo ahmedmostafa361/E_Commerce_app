@@ -8,7 +8,7 @@ extension RegisterRequestMappers on RegisterRequest{
         email: email,
         password: password,
       name: name,
-      passwordConfirm: passwordConfirm,
+        rePassword: rePassword,
       phone: phone
     );
   }

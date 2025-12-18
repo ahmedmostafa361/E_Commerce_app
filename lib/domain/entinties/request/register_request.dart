@@ -3,7 +3,7 @@ class RegisterRequest {
   final String? email;
   final String? password;
   final String? name;
-  final String? passwordConfirm;
+  final String? rePassword;
   final String? phone;
 
   RegisterRequest ({
@@ -11,7 +11,7 @@ class RegisterRequest {
     this.password,
     this.name,
     this.phone,
-    this.passwordConfirm
+    this.rePassword
   });
 
 }

@@ -33,22 +33,23 @@ class CustomTextFormField extends StatelessWidget {
     this.validator,
     this.obscureText = false,
     this.keyboardType = TextInputType.text,
-    this.obscuringCharacter = '.'
+    this.obscuringCharacter = '*'
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+
       style: Theme
           .of(context)
           .textTheme
-          .headlineMedium,
+          .headlineSmall,
       maxLines: maxLines ?? 1,
       controller: controller,
       validator: validator,
       obscureText: obscureText,
       keyboardType: keyboardType,
-      obscuringCharacter: obscuringCharacter,
+      obscuringCharacter: obscuringCharacter  ,
       decoration: InputDecoration(
         border: outlineInputBorder(borderSideColor: borderSideColor),
         enabledBorder: outlineInputBorder(borderSideColor: borderSideColor),
@@ -60,10 +61,11 @@ class CustomTextFormField extends StatelessWidget {
         fillColor: fillColor ?? AppColors.whiteColor,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
+        filled:true,
         hintText: hintText,
-        hintStyle: hintStyle ?? AppTextStyle.hint14Grey,
+        hintStyle: hintStyle ?? AppTextStyle.normal18Grey,
         labelText: labelText,
-        labelStyle: labelStyle,
+        labelStyle: labelStyle?? AppTextStyle.normal18Grey,
       ),
     );
   }

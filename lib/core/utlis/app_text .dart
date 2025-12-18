@@ -9,12 +9,21 @@ class AppTextStyle {
     fontSize: 24,
     fontWeight: FontWeight.w600,
   );
-
+  static final TextStyle normal18White = GoogleFonts.poppins(
+    color: AppColors.whiteColor,
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+  );
+  static final TextStyle normal16WhitePoppins = GoogleFonts.poppins(
+    color: AppColors.whiteColor,
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+  );
   // Subtitle
-  static final TextStyle subtitle14Grey = GoogleFonts.poppins(
+  static final TextStyle normal18Grey = GoogleFonts.poppins(
     color: AppColors.greyColor,
-    fontSize: 14,
-    fontWeight: FontWeight.w400,
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
   );
 
   // Input label
@@ -32,10 +41,10 @@ class AppTextStyle {
   );
 
   // Button text
-  static final TextStyle button16Blue = GoogleFonts.poppins(
+  static final TextStyle button20Blue = GoogleFonts.poppins(
     color: AppColors.primaryBlue,
-    fontSize: 16,
-    fontWeight: FontWeight.bold,
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
   );
 
   // Nav bar & icons black70 (used in home screen)

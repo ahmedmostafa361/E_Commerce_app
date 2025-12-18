@@ -10,8 +10,8 @@ class RegisterRequestDto {
   final String? email;
   @JsonKey(name: "password")
   final String? password;
-  @JsonKey(name: "passwordConfirm")
-  final String? passwordConfirm;
+  @JsonKey(name: "rePassword")
+  final String? rePassword;
   @JsonKey(name: "phone")
   final String? phone;
 
@@ -19,7 +19,7 @@ class RegisterRequestDto {
     this.name,
     this.email,
     this.password,
-    this.passwordConfirm,
+    this.rePassword,
     this.phone,
   });
 
