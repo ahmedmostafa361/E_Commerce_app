@@ -38,6 +38,7 @@ dependencies:
   google_fonts: ^6.3.2
   json_annotation: ^4.9.0
   logger: ^2.6.2
+  animated_bottom_navigation_bar: ^1.2.0
   pretty_dio_logger: ^1.4.0
   flutter_bloc: ^9.1.1
   retrofit: 4.8.0
