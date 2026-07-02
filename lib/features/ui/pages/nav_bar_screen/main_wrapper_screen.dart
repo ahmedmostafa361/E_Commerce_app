@@ -1,22 +1,22 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:e_commerce_flutter_app/features/ui/pages/home_screen/tabs/favourite_screen.dart';
-import 'package:e_commerce_flutter_app/features/ui/pages/home_screen/tabs/home_screen.dart';
-import 'package:e_commerce_flutter_app/features/ui/pages/home_screen/tabs/product_screen.dart';
-import 'package:e_commerce_flutter_app/features/ui/pages/home_screen/tabs/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/utlis/app_assets .dart';
 import '../../../../core/utlis/app_colors .dart';
+import '../tabs/favourite_screen.dart';
+import '../tabs/home_screen/home_screen.dart';
+import '../tabs/product_screen.dart';
+import '../tabs/profile_screen.dart';
 
-class mainWrapperScreen extends StatefulWidget {
-  const mainWrapperScreen({super.key});
+class MainWrapperScreen extends StatefulWidget {
+  const MainWrapperScreen({super.key});
 
   @override
-  State<mainWrapperScreen> createState() => _HomeScreenTabState();
+  State<MainWrapperScreen> createState() => _HomeScreenTabState();
 }
 
-class _HomeScreenTabState extends State<mainWrapperScreen> {
+class _HomeScreenTabState extends State<MainWrapperScreen> {
   int selectedIndex = 0;
 
   // order matches your image: home, category, heart, user
