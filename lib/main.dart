@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'config/di.dart';
-import 'features/ui/pages/home_screen/main_wrapper_screen.dart';
+import 'features/ui/pages/nav_bar_screen/main_wrapper_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           routes: {
             AppRoutes.loginScreen:(context) => LoginScreen(),
             AppRoutes.registerScreen:(context) => RegisterScreen(),
-            AppRoutes.mainWrapperScreen: (context) => mainWrapperScreen(),
+            AppRoutes.mainWrapperScreen: (context) => MainWrapperScreen(),
           },
 
         );
