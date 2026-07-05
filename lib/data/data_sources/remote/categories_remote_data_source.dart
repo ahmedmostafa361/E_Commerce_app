@@ -1,5 +1,5 @@
-import '../../../domain/entinties/response/category/category.dart';
+import '../../../domain/entinties/response/category/category_or_brand.dart';
 
 abstract class CategoriesRemoteDataSource {
-  Future<List<Category>?> getAllCategories();
+  Future<List<CategoryOrBrand>?> getAllCategories();
 }

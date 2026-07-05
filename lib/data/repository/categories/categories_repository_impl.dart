@@ -1,5 +1,5 @@
 import 'package:e_commerce_flutter_app/data/data_sources/remote/categories_remote_data_source.dart';
-import 'package:e_commerce_flutter_app/domain/entinties/response/category/category.dart';
+import 'package:e_commerce_flutter_app/domain/entinties/response/category/category_or_brand.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../domain/repository/categories/categories_repository.dart';
@@ -11,7 +11,7 @@ class CategoriesRepositoryImpl implements CategoriesRepository {
   CategoriesRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<List<Category>?> getAllCategories() {
+  Future<List<CategoryOrBrand>?> getAllCategories() {
     // TODO: implement getAllCategories
     return remoteDataSource.getAllCategories();
   }

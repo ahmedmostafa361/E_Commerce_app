@@ -47,6 +47,7 @@ dependencies:
   dio: ^5.8.0+1
   flutter_image_slideshow: ^0.1.6
   cached_network_image: ^3.4.1
+  flutter_auto_size_text: ^5.0.0
 
 dev_dependencies:
   flutter_test:

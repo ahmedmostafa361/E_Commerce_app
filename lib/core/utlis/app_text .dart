@@ -25,7 +25,24 @@ class AppTextStyle {
     fontSize: 18,
     fontWeight: FontWeight.w500,
   );
+  static final TextStyle bold14black = GoogleFonts.poppins(
+    color: AppColors.blackColor,
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+  );
 
+  static final TextStyle normal12grey = GoogleFonts.poppins(
+    color: AppColors.greyColor,
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+  );
+  static final TextStyle strikeThrough12Grey = GoogleFonts.poppins(
+    color: AppColors.greyColor,
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    decoration: TextDecoration.lineThrough,
+    decorationColor: AppColors.greyColor,
+  );
   // Input label
   static final TextStyle label16White = GoogleFonts.poppins(
     color: AppColors.whiteColor,

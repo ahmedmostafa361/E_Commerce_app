@@ -13,7 +13,7 @@ CategoryResponseDto _$CategoryResponseDtoFromJson(Map<String, dynamic> json) =>
           ? null
           : MetaDataDto.fromJson(json['metadata'] as Map<String, dynamic>),
       data: (json['data'] as List<dynamic>?)
-          ?.map((e) => CategoryDto.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => CategoryOrBrandDto.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

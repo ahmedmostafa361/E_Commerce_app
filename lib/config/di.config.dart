@@ -17,17 +17,29 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart' as _i528;
 import '../api/api_services.dart' as _i124;
 import '../api/data_sources/remote/auth/auth_remote_data_source_impl.dart'
     as _i983;
+import '../api/data_sources/remote/brands/brands_remote_data_source_impl.dart'
+    as _i948;
 import '../api/data_sources/remote/categories/categories_remote_data_source_impl.dart'
     as _i661;
+import '../api/data_sources/remote/products/products_remote_data_source_impl.dart'
+    as _i1063;
 import '../api/dio/dio_module.dart' as _i223;
 import '../data/data_sources/remote/auth_remote_data_source.dart' as _i354;
+import '../data/data_sources/remote/brands_remote_data_source.dart' as _i337;
 import '../data/data_sources/remote/categories_remote_data_source.dart'
     as _i727;
+import '../data/data_sources/remote/products_remote_data_source.dart' as _i688;
 import '../data/repository/auth/auth_repository_impl.dart' as _i779;
+import '../data/repository/brands/brands_repository_impl.dart' as _i1059;
 import '../data/repository/categories/categories_repository_impl.dart' as _i142;
+import '../data/repository/products/products_repository_impl.dart' as _i996;
 import '../domain/repository/auth_repository.dart' as _i306;
+import '../domain/repository/brands/brands_repository.dart' as _i949;
 import '../domain/repository/categories/categories_repository.dart' as _i2;
+import '../domain/repository/products/products_repository.dart' as _i547;
+import '../domain/use_cases/get_all_brands_use_case.dart' as _i823;
 import '../domain/use_cases/get_all_categories_use_case.dart' as _i557;
+import '../domain/use_cases/get_all_products_use_case.dart' as _i960;
 import '../domain/use_cases/login_use_cases.dart' as _i750;
 import '../domain/use_cases/register_use_cases.dart' as _i548;
 import '../features/ui/auth/login_screen/cubit/login_view_model.dart' as _i662;
@@ -37,6 +49,8 @@ import '../features/ui/pages/nav_bar_screen/cubit/wrapper_screen_view_model.dart
     as _i221;
 import '../features/ui/pages/tabs/home_screen/cubit/home_screen_view_model.dart'
     as _i5;
+import '../features/ui/pages/tabs/product_screen/cubit/product_screen_view_model.dart'
+    as _i393;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -76,11 +90,21 @@ extension GetItInjectableX on _i174.GetIt {
         authRemoteDataSource: gh<_i354.AuthRemoteDataSource>(),
       ),
     );
+    gh.factory<_i688.ProductsRemoteDataSource>(
+      () => _i1063.ProductsRemoteDataSourceImpl(
+        apiServices: gh<_i124.ApiServices>(),
+      ),
+    );
     gh.factory<_i750.LoginUseCases>(
       () => _i750.LoginUseCases(authRepository: gh<_i306.AuthRepository>()),
     );
     gh.factory<_i548.RegisterUseCases>(
       () => _i548.RegisterUseCases(authRepository: gh<_i306.AuthRepository>()),
+    );
+    gh.factory<_i337.BrandsRemoteDataSource>(
+      () => _i948.BrandsRemoteDataSourceImpl(
+        apiServices: gh<_i124.ApiServices>(),
+      ),
     );
     gh.factory<_i662.LoginViewModel>(
       () => _i662.LoginViewModel(loginUseCases: gh<_i750.LoginUseCases>()),
@@ -95,14 +119,40 @@ extension GetItInjectableX on _i174.GetIt {
         registerUseCases: gh<_i548.RegisterUseCases>(),
       ),
     );
+    gh.factory<_i547.ProductsRepository>(
+      () => _i996.ProductsRepositoryImpl(
+        remoteDataSource: gh<_i688.ProductsRemoteDataSource>(),
+      ),
+    );
+    gh.factory<_i949.BrandsRepository>(
+      () => _i1059.BrandsRepositoryImpl(
+        remoteDataSource: gh<_i337.BrandsRemoteDataSource>(),
+      ),
+    );
     gh.factory<_i557.GetAllCategoriesUseCase>(
       () => _i557.GetAllCategoriesUseCase(
         categoriesRepository: gh<_i2.CategoriesRepository>(),
       ),
     );
+    gh.factory<_i960.GetAllProductsUseCase>(
+      () => _i960.GetAllProductsUseCase(
+        productsRepository: gh<_i547.ProductsRepository>(),
+      ),
+    );
+    gh.factory<_i823.GetAllBrandsUseCase>(
+      () => _i823.GetAllBrandsUseCase(
+        brandsRepository: gh<_i949.BrandsRepository>(),
+      ),
+    );
+    gh.factory<_i393.ProductScreenViewModel>(
+      () => _i393.ProductScreenViewModel(
+        getAllProductsUseCase: gh<_i960.GetAllProductsUseCase>(),
+      ),
+    );
     gh.factory<_i5.HomeScreenViewModel>(
       () => _i5.HomeScreenViewModel(
         getAllCategoriesUseCase: gh<_i557.GetAllCategoriesUseCase>(),
+        getAllBrandsUseCase: gh<_i823.GetAllBrandsUseCase>(),
       ),
     );
     return this;
