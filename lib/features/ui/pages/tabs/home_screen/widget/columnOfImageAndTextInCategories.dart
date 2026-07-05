@@ -1,14 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce_flutter_app/core/utlis/app_colors%20.dart';
 import 'package:e_commerce_flutter_app/core/utlis/app_text%20.dart';
-import 'package:e_commerce_flutter_app/domain/entinties/response/category/category.dart';
+import 'package:e_commerce_flutter_app/domain/entinties/response/category/category_or_brand.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 class ColumnOfImageAndTextInCategories extends StatelessWidget {
-  final Category category;
+  final CategoryOrBrand item;
   const ColumnOfImageAndTextInCategories({
     super.key,
-    required this.category,
+    required this.item,
   });
 
   @override
@@ -21,7 +21,7 @@ class ColumnOfImageAndTextInCategories extends StatelessWidget {
             aspectRatio: 1,
             child: ClipOval(
               child: CachedNetworkImage(
-                imageUrl: category.image ?? '',
+                imageUrl: item.image ?? '',
                 fit: BoxFit.cover,
                 placeholder: (context, url) =>
                     Center(
@@ -38,7 +38,7 @@ class ColumnOfImageAndTextInCategories extends StatelessWidget {
         ),
         SizedBox(height: 8.h),
         Text(
-          category.name ?? ' no category',
+          item.name ?? ' no category',
           style: AppTextStyle.normal14black,
           textAlign: TextAlign.center,
           maxLines: 2,

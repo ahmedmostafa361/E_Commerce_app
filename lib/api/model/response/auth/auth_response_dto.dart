@@ -1,4 +1,4 @@
-import 'package:e_commerce_flutter_app/api/model/response/user_response_dto.dart';
+import 'package:e_commerce_flutter_app/api/model/response/auth/user_response_dto.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'auth_response_dto.g.dart';

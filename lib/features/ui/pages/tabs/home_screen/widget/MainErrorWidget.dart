@@ -12,16 +12,18 @@ class MainErrorWidget extends StatelessWidget {
   });
 
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(errorMessage, style: AppTextStyle.bold16Red),
-        onPressed != null
-            ? ElevatedButton(
-                onPressed: onPressed,
-                child: Text('Try Again', style: AppTextStyle.normal16Grey),
-              )
-            : Container(),
-      ],
+    return Center(
+      child: Column(
+        children: [
+          Text(errorMessage, style: AppTextStyle.bold16Red),
+          onPressed != null
+              ? ElevatedButton(
+                  onPressed: onPressed,
+                  child: Text('Try Again', style: AppTextStyle.normal16Grey),
+                )
+              : Container(),
+        ],
+      ),
     );
   }
 }

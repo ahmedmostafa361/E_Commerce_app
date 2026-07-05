@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../common/category_or_brand_dto.dart';
 import '../common/meta_data_dto.dart';
-import 'category_dto.dart';
 
 part 'category_response_dto.g.dart';
 
@@ -12,7 +12,7 @@ class CategoryResponseDto {
   @JsonKey(name: "metadata")
   final MetaDataDto? metadata;
   @JsonKey(name: "data")
-  final List<CategoryDto>? data;
+  final List<CategoryOrBrandDto>? data;
 
   CategoryResponseDto({this.results, this.metadata, this.data});
 

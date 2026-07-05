@@ -1,6 +1,6 @@
 
 import 'package:e_commerce_flutter_app/core/utlis/app_assets%20.dart';
-import 'package:e_commerce_flutter_app/domain/entinties/response/category/category.dart';
+import 'package:e_commerce_flutter_app/domain/entinties/response/category/category_or_brand.dart';
 import 'package:e_commerce_flutter_app/features/ui/pages/tabs/home_screen/cubit/home_screen_states.dart';
 import 'package:e_commerce_flutter_app/features/ui/pages/tabs/home_screen/cubit/home_screen_view_model.dart';
 import 'package:e_commerce_flutter_app/features/ui/pages/tabs/home_screen/widget/MainErrorWidget.dart';
@@ -38,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     super.initState();
     viewModel.getCategories();
+    viewModel.getBrands();
   }
 
   @override
@@ -69,9 +70,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   viewModel.getCategories();
                 },);
               }
-              else if (state is CategoriesSuccessState) {
+              else if (state is HomeTabSuccessState) {
                 return _buildCategoryBrandSec(
-                    categoriesList: state.categoriesList!);
+                    categoryOrBrandList: state.categoriesList!);
               }
 
               else {
@@ -88,8 +89,26 @@ class _HomeScreenState extends State<HomeScreen> {
             child: const RowOfTextAndViewAll(name: 'Brands'),
           ),
           SizedBox(height: 12.h),
-          // _buildCategoryBrandSec(categoriesList:  ),
-          SizedBox(height: 20.h),
+
+          BlocBuilder<HomeScreenViewModel, HomeScreenStates>(
+            bloc: viewModel,
+            builder: (context, state) {
+              if (state is BrandsErrorState) {
+                return MainErrorWidget(
+                  errorMessage: state.message, onPressed: () {
+                  viewModel.getBrands();
+                },);
+              }
+              else if (state is HomeTabSuccessState) {
+                return _buildCategoryBrandSec(
+                    categoryOrBrandList: state.brandsList!);
+              }
+
+              else {
+                return MainLoadingWidget();
+              }
+            },)
+          , SizedBox(height: 20.h),
         ],
       ),
     );
@@ -126,13 +145,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildCategoryBrandSec({required List<Category> categoriesList}) {
+  Widget _buildCategoryBrandSec(
+      {required List<CategoryOrBrand> categoryOrBrandList}) {
     return SizedBox(
       height: 220.h, // try increasing this, e.g. 240.h, 260.h
       child: GridView.builder(
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         scrollDirection: Axis.horizontal,
-        itemCount: categoriesList.length,
+        itemCount: categoryOrBrandList.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           mainAxisSpacing: 5.w,
@@ -141,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         itemBuilder: (context, index) {
           return ColumnOfImageAndTextInCategories(
-            category: categoriesList[index],
+            item: categoryOrBrandList[index],
           );
         },
       ),
