@@ -14,11 +14,42 @@ import 'package:flutter/widgets.dart';
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/ad1.png
+  AssetGenImage get ad1 => const AssetGenImage('assets/images/ad1.png');
+
+  /// File path: assets/images/ad2.png
+  AssetGenImage get ad2 => const AssetGenImage('assets/images/ad2.png');
+
+  /// File path: assets/images/ad3.png
+  AssetGenImage get ad3 => const AssetGenImage('assets/images/ad3.png');
+
+  /// File path: assets/images/category.png
+  AssetGenImage get category =>
+      const AssetGenImage('assets/images/category.png');
+
+  /// File path: assets/images/heart.png
+  AssetGenImage get heart => const AssetGenImage('assets/images/heart.png');
+
+  /// File path: assets/images/home.png
+  AssetGenImage get home => const AssetGenImage('assets/images/home.png');
+
   /// File path: assets/images/route.png
   AssetGenImage get route => const AssetGenImage('assets/images/route.png');
 
+  /// File path: assets/images/user.png
+  AssetGenImage get user => const AssetGenImage('assets/images/user.png');
+
   /// List of all assets
-  List<AssetGenImage> get values => [route];
+  List<AssetGenImage> get values => [
+    ad1,
+    ad2,
+    ad3,
+    category,
+    heart,
+    home,
+    route,
+    user,
+  ];
 }
 
 class Assets {

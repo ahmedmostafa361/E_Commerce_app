@@ -1,7 +1,7 @@
 import 'package:e_commerce_flutter_app/api/api_services.dart';
-import 'package:e_commerce_flutter_app/api/mappers/auth_response_mappers.dart';
-import 'package:e_commerce_flutter_app/api/mappers/login_request_mappers.dart';
-import 'package:e_commerce_flutter_app/api/mappers/register_request_mappers.dart';
+import 'package:e_commerce_flutter_app/api/mappers/auth/auth_response_mappers.dart';
+import 'package:e_commerce_flutter_app/api/mappers/auth/login_request_mappers.dart';
+import 'package:e_commerce_flutter_app/api/mappers/auth/register_request_mappers.dart';
 import 'package:e_commerce_flutter_app/data/data_sources/remote/auth_remote_data_source.dart';
 import 'package:e_commerce_flutter_app/domain/entinties/request/login_request.dart';
 import 'package:e_commerce_flutter_app/domain/entinties/request/register_request.dart';
