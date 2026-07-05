@@ -1,28 +1,44 @@
+
 import 'package:e_commerce_flutter_app/core/utlis/app_assets%20.dart';
+import 'package:e_commerce_flutter_app/domain/entinties/response/category/category.dart';
+import 'package:e_commerce_flutter_app/features/ui/pages/tabs/home_screen/cubit/home_screen_states.dart';
+import 'package:e_commerce_flutter_app/features/ui/pages/tabs/home_screen/cubit/home_screen_view_model.dart';
+import 'package:e_commerce_flutter_app/features/ui/pages/tabs/home_screen/widget/MainErrorWidget.dart';
+import 'package:e_commerce_flutter_app/features/ui/pages/tabs/home_screen/widget/MainLodaingWidget.dart';
 import 'package:e_commerce_flutter_app/features/ui/pages/tabs/home_screen/widget/RowOfTextAndViewAll.dart';
 import 'package:e_commerce_flutter_app/features/ui/pages/tabs/home_screen/widget/columnOfImageAndTextInCategories.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class HomeScreen extends StatelessWidget {
+import '../../../../../config/di.dart';
+
+
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
-  // TODO: replace with real data from your API/model layer
-  static const List<Map<String, String>> categories = [
-    {'image': 'https://picsum.photos/id/1/200', 'label': 'Tech'},
-    {'image': 'https://picsum.photos/id/2/200', 'label': 'Fashion'},
-    {'image': 'https://picsum.photos/id/3/200', 'label': 'Home'},
-    {'image': 'https://picsum.photos/id/4/200', 'label': 'Sports'},
-    {'image': 'https://picsum.photos/id/5/200', 'label': 'Beauty'},
-    {'image': 'https://picsum.photos/id/6/200', 'label': 'Toys'},
-  ];
-
+  // TODO: replace with real data once brands API is ready
   static const List<Map<String, String>> brands = [
     {'image': 'https://picsum.photos/id/11/200', 'label': 'Apple'},
     {'image': 'https://picsum.photos/id/12/200', 'label': 'Samsung'},
     {'image': 'https://picsum.photos/id/13/200', 'label': 'Sony'},
   ];
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+
+class _HomeScreenState extends State<HomeScreen> {
+  final viewModel = getIt<HomeScreenViewModel>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    viewModel.getCategories();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,19 +51,44 @@ class HomeScreen extends StatelessWidget {
             images: [AppAssets.ad1, AppAssets.ad2, AppAssets.ad3],
           ),
           SizedBox(height: 20.h),
+
+          // Categories header - static, doesn't need Cubit
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: const RowOfTextAndViewAll(name: 'Categories'),
           ),
           SizedBox(height: 12.h),
-          _buildCategoryBrandSec(items: categories),
+
+          // Only the categories grid reacts to the Cubit
+          BlocBuilder<HomeScreenViewModel, HomeScreenStates>(
+            bloc: viewModel,
+            builder: (context, state) {
+              if (state is CategoriesErrorState) {
+                return MainErrorWidget(
+                  errorMessage: state.message, onPressed: () {
+                  viewModel.getCategories();
+                },);
+              }
+              else if (state is CategoriesSuccessState) {
+                return _buildCategoryBrandSec(
+                    categoriesList: state.categoriesList!);
+              }
+
+              else {
+                return MainLoadingWidget();
+              }
+            },
+          ),
+
           SizedBox(height: 20.h),
+
+          // Brands section - static for now
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: const RowOfTextAndViewAll(name: 'Brands'),
           ),
           SizedBox(height: 12.h),
-          _buildCategoryBrandSec(items: brands),
+          // _buildCategoryBrandSec(categoriesList:  ),
           SizedBox(height: 20.h),
         ],
       ),
@@ -69,7 +110,8 @@ class HomeScreen extends StatelessWidget {
           isLoop: true,
           children: images
               .map(
-                (img) => ClipRRect(
+                (img) =>
+                ClipRRect(
                   borderRadius: BorderRadius.circular(16.r),
                   child: Image.asset(
                     img,
@@ -77,31 +119,32 @@ class HomeScreen extends StatelessWidget {
                     width: double.infinity,
                   ),
                 ),
-              )
+          )
               .toList(),
         ),
       ),
     );
   }
 
-  Widget _buildCategoryBrandSec({required List<Map<String, String>> items}) {
-    return GridView.builder(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: items.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        mainAxisSpacing: 16.h,
-        crossAxisSpacing: 12.w,
-        childAspectRatio: 0.8,
+  Widget _buildCategoryBrandSec({required List<Category> categoriesList}) {
+    return SizedBox(
+      height: 220.h, // try increasing this, e.g. 240.h, 260.h
+      child: GridView.builder(
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        scrollDirection: Axis.horizontal,
+        itemCount: categoriesList.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: 5.w,
+          crossAxisSpacing: 16.h,
+          childAspectRatio: 0.68, // was 0.8 — lower value = taller cell
+        ),
+        itemBuilder: (context, index) {
+          return ColumnOfImageAndTextInCategories(
+            category: categoriesList[index],
+          );
+        },
       ),
-      itemBuilder: (context, index) {
-        return ColumnOfImageAndTextInCategories(
-          imageUrl: items[index]['image']!,
-          label: items[index]['label']!,
-        );
-      },
     );
   }
 }
