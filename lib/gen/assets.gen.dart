@@ -33,6 +33,18 @@ class $AssetsImagesGen {
   /// File path: assets/images/home.png
   AssetGenImage get home => const AssetGenImage('assets/images/home.png');
 
+  /// File path: assets/images/image 2@2x.png
+  AssetGenImage get image22x =>
+      const AssetGenImage('assets/images/image 2@2x.png');
+
+  /// File path: assets/images/image 2@3x.png
+  AssetGenImage get image23x =>
+      const AssetGenImage('assets/images/image 2@3x.png');
+
+  /// File path: assets/images/logoECommerce.png
+  AssetGenImage get logoECommerce =>
+      const AssetGenImage('assets/images/logoECommerce.png');
+
   /// File path: assets/images/route.png
   AssetGenImage get route => const AssetGenImage('assets/images/route.png');
 
@@ -47,6 +59,9 @@ class $AssetsImagesGen {
     category,
     heart,
     home,
+    image22x,
+    image23x,
+    logoECommerce,
     route,
     user,
   ];

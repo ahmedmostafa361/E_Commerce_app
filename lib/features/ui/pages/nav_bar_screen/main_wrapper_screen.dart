@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../config/di.dart';
 import '../../../../core/utlis/app_colors .dart';
+import '../../../../widget/custom_app_bar.dart';
 import 'cubit/wrapper_screen_states.dart';
 
 
@@ -25,6 +26,7 @@ class _HomeScreenTabState extends State<MainWrapperScreen> {
       bloc: viewModel,
       builder: (BuildContext context, WrapperScreenStates state) {
         return Scaffold(
+          appBar: const CustomHomeAppBar(),
           backgroundColor: AppColors.whiteColor,
           bottomNavigationBar: AnimatedBottomNavigationBar.builder(
             backgroundColor: AppColors.primaryBlue,

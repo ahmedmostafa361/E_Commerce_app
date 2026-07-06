@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce_flutter_app/core/utlis/app_colors%20.dart';
 import 'package:e_commerce_flutter_app/core/utlis/app_text%20.dart';
 import 'package:e_commerce_flutter_app/domain/entinties/response/products/product.dart';
+import 'package:e_commerce_flutter_app/features/ui/pages/cart_screen/cubit/cart_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auto_size_text/flutter_auto_size_text.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -52,22 +53,24 @@ class _ProductTabItemState extends State<ProductTabItem> {
                   child: CachedNetworkImage(
                     imageUrl: product.imageCover ?? '',
                     fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(
-                      color: Colors.grey.shade200,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: AppColors.redColor,
+                    placeholder: (context, url) =>
+                        Container(
+                          color: Colors.grey.shade200,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: AppColors.redColor,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    errorWidget: (context, url, error) => Container(
-                      color: Colors.grey.shade200,
-                      child: Icon(
-                        Icons.error_outline,
-                        color: AppColors.redColor,
-                      ),
-                    ),
+                    errorWidget: (context, url, error) =>
+                        Container(
+                          color: Colors.grey.shade200,
+                          child: Icon(
+                            Icons.error_outline,
+                            color: AppColors.redColor,
+                          ),
+                        ),
                   ),
                 ),
                 Positioned(
@@ -163,7 +166,8 @@ class _ProductTabItemState extends State<ProductTabItem> {
                             SizedBox(width: 2.w),
                             Flexible(
                               child: AutoSizeText(
-                                '(${product.ratingsAverage?.toStringAsFixed(1) ?? '0.0'})',
+                                '(${product.ratingsAverage?.toStringAsFixed(
+                                    1) ?? '0.0'})',
                                 style: AppTextStyle.normal12grey,
                                 maxLines: 1,
                                 minFontSize: 9,
@@ -173,9 +177,11 @@ class _ProductTabItemState extends State<ProductTabItem> {
                           ],
                         ),
                       ),
-                      GestureDetector(
+                      InkWell(
                         onTap: () {
                           // TODO: add to cart use case
+                          CartViewModel.get(context).addToCart(product.id ??
+                              '');
                         },
                         child: CircleAvatar(
                           radius: 14.r,
