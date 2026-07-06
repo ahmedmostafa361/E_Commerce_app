@@ -1,0 +1,525 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_auto_size_text/flutter_auto_size_text.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../../../core/utlis/app_colors .dart';
+import '../../../../../core/utlis/app_text .dart';
+import '../../../../../domain/entinties/response/products/product.dart';
+
+class ProductDetailsScreen extends StatefulWidget {
+  const ProductDetailsScreen({super.key});
+
+  @override
+  State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
+}
+
+class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
+  final PageController _pageController = PageController();
+  int _currentImageIndex = 0;
+  int _quantity = 1;
+  int _selectedSizeIndex = 2; // default matches design (size "40" pre-selected)
+  int _selectedColorIndex =
+      1; // default matches design (2nd color pre-selected)
+  bool _isFavourite = false;
+  bool _isDescriptionExpanded = false;
+
+  // TODO: replace with real data once API sends size/color options
+  static const List<String> fakeSizes = ['38', '39', '40', '41', '42'];
+  static const List<Color> fakeColors = [
+    Colors.black,
+    Colors.red,
+    Colors.blue,
+    Colors.green,
+    Colors.pinkAccent,
+  ];
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final product = ModalRoute.of(context)!.settings.arguments as Product;
+    final images = (product.images != null && product.images!.isNotEmpty)
+        ? product.images!
+        : [product.imageCover ?? ''];
+
+    final realPrice = product.price ?? 0;
+    final totalPrice = realPrice * _quantity;
+
+    return Scaffold(
+      backgroundColor: AppColors.whiteColor,
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildAppBar(context),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 14.h),
+                    _buildImageSlider(images),
+                    SizedBox(height: 20.h),
+                    _buildTitleAndPrice(product, realPrice),
+                    SizedBox(height: 16.h),
+                    _buildSoldRatingAndQuantity(product),
+                    SizedBox(height: 24.h),
+                    _buildDescription(product),
+                    SizedBox(height: 24.h),
+                    _buildSizeSelector(),
+                    SizedBox(height: 24.h),
+                    _buildColorSelector(),
+                    SizedBox(height: 24.h),
+                  ],
+                ),
+              ),
+            ),
+            _buildBottomBar(totalPrice),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ---------------- App bar ----------------
+  Widget _buildAppBar(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+      child: Row(
+        children: [
+          IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: AppColors.primaryBlue,
+              size: 26.sp,
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          Expanded(
+            child: Text(
+              'Product Details',
+              textAlign: TextAlign.center,
+              style: AppTextStyle.bold14black.copyWith(fontSize: 22.sp),
+            ),
+          ),
+          IconButton(
+            icon: Icon(Icons.search, color: AppColors.primaryBlue, size: 26.sp),
+            onPressed: () {
+              // TODO: implement search
+            },
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.shopping_cart_outlined,
+              color: AppColors.primaryBlue,
+              size: 26.sp,
+            ),
+            onPressed: () {
+              // TODO: navigate to cart
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ---------------- Image slider ----------------
+  Widget _buildImageSlider(List<String> images) {
+    return Stack(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(24.r),
+          child: SizedBox(
+            height: 320.h,
+            width: double.infinity,
+            child: PageView.builder(
+              controller: _pageController,
+              itemCount: images.length,
+              onPageChanged: (index) =>
+                  setState(() => _currentImageIndex = index),
+              itemBuilder: (context, index) {
+                return CachedNetworkImage(
+                  imageUrl: images[index],
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(
+                    color: Colors.grey.shade200,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppColors.redColor,
+                      ),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: Colors.grey.shade200,
+                    child: Icon(
+                      Icons.error_outline,
+                      color: AppColors.redColor,
+                      size: 32.sp,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+        // favourite icon
+        Positioned(
+          top: 14.h,
+          right: 14.w,
+          child: GestureDetector(
+            onTap: () {
+              setState(() => _isFavourite = !_isFavourite);
+              // TODO: call favourite/wishlist use case
+            },
+            child: CircleAvatar(
+              radius: 22.r,
+              backgroundColor: Colors.white,
+              child: Icon(
+                _isFavourite ? Icons.favorite : Icons.favorite_border,
+                color: AppColors.primaryBlue,
+                size: 24.sp,
+              ),
+            ),
+          ),
+        ),
+        // page indicator dots
+        if (images.length > 1)
+          Positioned(
+            bottom: 14.h,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(images.length, (index) {
+                final isActive = index == _currentImageIndex;
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 250),
+                  margin: EdgeInsets.symmetric(horizontal: 4.w),
+                  width: isActive ? 22.w : 8.w,
+                  height: 8.h,
+                  decoration: BoxDecoration(
+                    color: isActive
+                        ? AppColors.primaryBlue
+                        : Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(5.r),
+                  ),
+                );
+              }),
+            ),
+          ),
+      ],
+    );
+  }
+
+  // ---------------- Title + price ----------------
+  Widget _buildTitleAndPrice(Product product, int realPrice) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: AutoSizeText(
+            product.title ?? 'No title',
+            style: AppTextStyle.bold14black.copyWith(fontSize: 22.sp),
+            maxLines: 2,
+            minFontSize: 16,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        SizedBox(width: 10.w),
+        AutoSizeText(
+          'EGP $realPrice',
+          style: AppTextStyle.bold14black.copyWith(fontSize: 22.sp),
+          maxLines: 1,
+          minFontSize: 14,
+        ),
+      ],
+    );
+  }
+
+  // ---------------- Sold + rating + quantity ----------------
+  Widget _buildSoldRatingAndQuantity(Product product) {
+    return Row(
+      children: [
+        // sold pill
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(24.r),
+          ),
+          child: AutoSizeText(
+            '${product.sold ?? 0} Sold',
+            style: AppTextStyle.normal12grey.copyWith(fontSize: 14.sp),
+            maxLines: 1,
+          ),
+        ),
+        SizedBox(width: 12.w),
+        // rating
+        Flexible(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.star, size: 20.sp, color: Colors.amber),
+              SizedBox(width: 4.w),
+              Flexible(
+                child: AutoSizeText(
+                  '${product.ratingsAverage?.toStringAsFixed(1) ?? '0.0'} (${product.ratingsQuantity ?? 0})',
+                  style: AppTextStyle.normal12grey.copyWith(fontSize: 14.sp),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const Spacer(),
+        // quantity stepper
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
+          decoration: BoxDecoration(
+            color: AppColors.primaryBlue,
+            borderRadius: BorderRadius.circular(24.r),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _quantityButton(
+                icon: Icons.remove,
+                onTap: () {
+                  if (_quantity > 1) setState(() => _quantity--);
+                },
+              ),
+              SizedBox(width: 12.w),
+              Text(
+                '$_quantity',
+                style: AppTextStyle.normal18White.copyWith(fontSize: 16.sp),
+              ),
+              SizedBox(width: 12.w),
+              _quantityButton(
+                icon: Icons.add,
+                onTap: () {
+                  final maxQuantity = product.quantity ?? 999;
+                  if (_quantity < maxQuantity) setState(() => _quantity++);
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _quantityButton({
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      // registers taps across the whole box, not just the icon glyph
+      onTap: onTap,
+      child: SizedBox(
+        width: 28.w,
+        height: 28.w,
+        child: Icon(icon, color: Colors.white, size: 20.sp),
+      ),
+    );
+  }
+
+  // ---------------- Description ----------------
+  Widget _buildDescription(Product product) {
+    final description = product.description ?? 'No description available.';
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Description',
+          style: AppTextStyle.bold14black.copyWith(fontSize: 20.sp),
+        ),
+        SizedBox(height: 8.h),
+        RichText(
+          maxLines: _isDescriptionExpanded ? null : 2,
+          overflow: _isDescriptionExpanded
+              ? TextOverflow.visible
+              : TextOverflow.ellipsis,
+          text: TextSpan(
+            style: AppTextStyle.normal12grey.copyWith(
+              fontSize: 16.sp,
+              height: 1.5,
+            ),
+            children: [
+              TextSpan(text: description),
+              TextSpan(
+                text: _isDescriptionExpanded ? '  Show less' : '  Read More',
+                style: AppTextStyle.bold14black.copyWith(fontSize: 16.sp),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    setState(
+                      () => _isDescriptionExpanded = !_isDescriptionExpanded,
+                    );
+                  },
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ---------------- Size selector ----------------
+  // TODO: replace fakeSizes with product.sizes once API supports it
+  Widget _buildSizeSelector() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Size', style: AppTextStyle.bold14black.copyWith(fontSize: 20.sp)),
+        SizedBox(height: 12.h),
+        Wrap(
+          spacing: 12.w,
+          runSpacing: 12.h,
+          children: List.generate(fakeSizes.length, (index) {
+            final isSelected = index == _selectedSizeIndex;
+            return GestureDetector(
+              onTap: () => setState(() => _selectedSizeIndex = index),
+              child: Container(
+                width: 52.w,
+                height: 52.w,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: isSelected
+                      ? AppColors.primaryBlue
+                      : Colors.transparent,
+                  border: Border.all(
+                    color: isSelected
+                        ? AppColors.primaryBlue
+                        : Colors.grey.shade300,
+                    width: 1.5,
+                  ),
+                ),
+                child: AutoSizeText(
+                  fakeSizes[index],
+                  style: isSelected
+                      ? AppTextStyle.normal18White.copyWith(fontSize: 18.sp)
+                      : AppTextStyle.bold14black.copyWith(fontSize: 18.sp),
+                  maxLines: 1,
+                ),
+              ),
+            );
+          }),
+        ),
+      ],
+    );
+  }
+
+  // ---------------- Color selector ----------------
+  // TODO: replace fakeColors with product.colors once API supports it
+  Widget _buildColorSelector() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Color',
+          style: AppTextStyle.bold14black.copyWith(fontSize: 20.sp),
+        ),
+        SizedBox(height: 12.h),
+        Wrap(
+          spacing: 14.w,
+          runSpacing: 12.h,
+          children: List.generate(fakeColors.length, (index) {
+            final isSelected = index == _selectedColorIndex;
+            return GestureDetector(
+              onTap: () => setState(() => _selectedColorIndex = index),
+              child: Container(
+                width: 42.w,
+                height: 42.w,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: fakeColors[index],
+                ),
+                child: isSelected
+                    ? Icon(Icons.check, color: Colors.white, size: 20.sp)
+                    : null,
+              ),
+            );
+          }),
+        ),
+      ],
+    );
+  }
+
+  // ---------------- Bottom bar ----------------
+  Widget _buildBottomBar(int totalPrice) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 10,
+            offset: const Offset(0, -4),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        top: false,
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Total price',
+                    style: AppTextStyle.normal12grey.copyWith(fontSize: 14.sp),
+                  ),
+                  AutoSizeText(
+                    'EGP $totalPrice',
+                    style: AppTextStyle.bold14black.copyWith(fontSize: 20.sp),
+                    maxLines: 1,
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(width: 14.w),
+            Expanded(
+              flex: 2,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  // TODO: call add-to-cart use case with:
+                  // product.id, _quantity, fakeSizes[_selectedSizeIndex], fakeColors[_selectedColorIndex]
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryBlue,
+                  padding: EdgeInsets.symmetric(vertical: 16.h),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(32.r),
+                  ),
+                ),
+                icon: Icon(
+                  Icons.shopping_cart,
+                  color: Colors.white,
+                  size: 22.sp,
+                ),
+                label: AutoSizeText(
+                  'Add to cart',
+                  style: AppTextStyle.normal18White.copyWith(fontSize: 17.sp),
+                  maxLines: 1,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

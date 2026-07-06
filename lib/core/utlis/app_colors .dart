@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 class AppColors {
+
   static const Color bgLight = Color(0xffF2FEFF);
   static const Color bgDark = Color(0xff101127);
   static const Color darkBlueColor = Color(0xff5669FF);
@@ -16,6 +17,10 @@ class AppColors {
   static const Color greyColor = Color(0xFF808080);
   static const Color black70 = Color(0xB2000000);
   static const Color navy60 = Color(0x9906004F);
-
+  static const Color primaryColor = Color(
+      0xff2044D0); // main brand blue (edit icon, borders, buttons)
+  static const Color scaffoldBackgroundColor = Color(
+      0xffF7F8FC); // screen background
 }
+
 

@@ -19,6 +19,8 @@ import '../api/data_sources/remote/auth/auth_remote_data_source_impl.dart'
     as _i983;
 import '../api/data_sources/remote/brands/brands_remote_data_source_impl.dart'
     as _i948;
+import '../api/data_sources/remote/cart/cart_remote_data_source_impl.dart'
+    as _i835;
 import '../api/data_sources/remote/categories/categories_remote_data_source_impl.dart'
     as _i661;
 import '../api/data_sources/remote/products/products_remote_data_source_impl.dart'
@@ -26,17 +28,21 @@ import '../api/data_sources/remote/products/products_remote_data_source_impl.dar
 import '../api/dio/dio_module.dart' as _i223;
 import '../data/data_sources/remote/auth_remote_data_source.dart' as _i354;
 import '../data/data_sources/remote/brands_remote_data_source.dart' as _i337;
+import '../data/data_sources/remote/cart_remote_data_source.dart' as _i798;
 import '../data/data_sources/remote/categories_remote_data_source.dart'
     as _i727;
 import '../data/data_sources/remote/products_remote_data_source.dart' as _i688;
 import '../data/repository/auth/auth_repository_impl.dart' as _i779;
 import '../data/repository/brands/brands_repository_impl.dart' as _i1059;
+import '../data/repository/cart/cart_repository_impl.dart' as _i127;
 import '../data/repository/categories/categories_repository_impl.dart' as _i142;
 import '../data/repository/products/products_repository_impl.dart' as _i996;
+import '../domain/repository/add_cart/cart_repository.dart' as _i909;
 import '../domain/repository/auth_repository.dart' as _i306;
 import '../domain/repository/brands/brands_repository.dart' as _i949;
 import '../domain/repository/categories/categories_repository.dart' as _i2;
 import '../domain/repository/products/products_repository.dart' as _i547;
+import '../domain/use_cases/add_to_cart_use_case.dart' as _i994;
 import '../domain/use_cases/get_all_brands_use_case.dart' as _i823;
 import '../domain/use_cases/get_all_categories_use_case.dart' as _i557;
 import '../domain/use_cases/get_all_products_use_case.dart' as _i960;
@@ -45,6 +51,7 @@ import '../domain/use_cases/register_use_cases.dart' as _i548;
 import '../features/ui/auth/login_screen/cubit/login_view_model.dart' as _i662;
 import '../features/ui/auth/register_screen/cubit/register_view_model.dart'
     as _i588;
+import '../features/ui/pages/cart_screen/cubit/cart_view_model.dart' as _i65;
 import '../features/ui/pages/nav_bar_screen/cubit/wrapper_screen_view_model.dart'
     as _i221;
 import '../features/ui/pages/tabs/home_screen/cubit/home_screen_view_model.dart'
@@ -90,6 +97,15 @@ extension GetItInjectableX on _i174.GetIt {
         authRemoteDataSource: gh<_i354.AuthRemoteDataSource>(),
       ),
     );
+    gh.factory<_i798.CartRemoteDataSource>(
+      () =>
+          _i835.CartRemoteDataSourceImpl(apiServices: gh<_i124.ApiServices>()),
+    );
+    gh.factory<_i909.CartRepository>(
+      () => _i127.CartRepositoryImpl(
+        remoteDataSource: gh<_i798.CartRemoteDataSource>(),
+      ),
+    );
     gh.factory<_i688.ProductsRemoteDataSource>(
       () => _i1063.ProductsRemoteDataSourceImpl(
         apiServices: gh<_i124.ApiServices>(),
@@ -129,10 +145,16 @@ extension GetItInjectableX on _i174.GetIt {
         remoteDataSource: gh<_i337.BrandsRemoteDataSource>(),
       ),
     );
+    gh.factory<_i994.AddToCartUseCase>(
+      () => _i994.AddToCartUseCase(cartRepository: gh<_i909.CartRepository>()),
+    );
     gh.factory<_i557.GetAllCategoriesUseCase>(
       () => _i557.GetAllCategoriesUseCase(
         categoriesRepository: gh<_i2.CategoriesRepository>(),
       ),
+    );
+    gh.factory<_i65.CartViewModel>(
+      () => _i65.CartViewModel(addToCartUseCase: gh<_i994.AddToCartUseCase>()),
     );
     gh.factory<_i960.GetAllProductsUseCase>(
       () => _i960.GetAllProductsUseCase(

@@ -7,42 +7,71 @@ import 'package:injectable/injectable.dart';
 import 'home_screen_states.dart';
 
 @injectable
-class HomeScreenViewModel extends Cubit<HomeScreenStates> {
-  GetAllCategoriesUseCase getAllCategoriesUseCase;
-  GetAllBrandsUseCase getAllBrandsUseCase;
+class HomeScreenViewModel extends Cubit<HomeScreenState> {
+  final GetAllCategoriesUseCase getAllCategoriesUseCase;
+  final GetAllBrandsUseCase getAllBrandsUseCase;
 
-  HomeTabSuccessState successState = HomeTabSuccessState();
+  HomeScreenViewModel({
+    required this.getAllCategoriesUseCase,
+    required this.getAllBrandsUseCase,
+  }) : super(
+    const HomeScreenState(
+      isCategoriesLoading: true,
+      isBrandsLoading: true,
+    ),
+  );
 
-  HomeScreenViewModel(
-      {required this.getAllCategoriesUseCase, required this.getAllBrandsUseCase})
-    : super(HomeScreenInitialStates()) {
-    // getCategories();
-  }
-
-  // TODO: replace with real API call later
   Future<void> getCategories() async {
-    try {
-      emit(CategoriesLoadingState());
+    emit(
+      state.copyWith(
+        isCategoriesLoading: true,
+        categoriesError: null,
+      ),
+    );
 
-      var categoriesList = await getAllCategoriesUseCase.invoke();
+    try {
+      final categories = await getAllCategoriesUseCase.invoke();
 
       emit(
-          successState = successState.copyWith(categoriesList: categoriesList));
+        state.copyWith(
+          isCategoriesLoading: false,
+          categoriesList: categories,
+        ),
+      );
     } on AppException catch (e) {
-      emit(CategoriesErrorState(message: e.errorMessage));
+      emit(
+        state.copyWith(
+          isCategoriesLoading: false,
+          categoriesError: e.errorMessage,
+        ),
+      );
     }
   }
 
   Future<void> getBrands() async {
+    emit(
+      state.copyWith(
+        isBrandsLoading: true,
+        brandsError: null,
+      ),
+    );
+
     try {
-      emit(BrandsLoadingState());
+      final brands = await getAllBrandsUseCase.invoke();
 
-      var brandsList = await getAllBrandsUseCase.invoke();
-
-      emit(successState = successState.copyWith(brandsList: brandsList));
+      emit(
+        state.copyWith(
+          isBrandsLoading: false,
+          brandsList: brands,
+        ),
+      );
     } on AppException catch (e) {
-      emit(BrandsErrorState(message: e.errorMessage));
+      emit(
+        state.copyWith(
+          isBrandsLoading: false,
+          brandsError: e.errorMessage,
+        ),
+      );
     }
   }
-
 }

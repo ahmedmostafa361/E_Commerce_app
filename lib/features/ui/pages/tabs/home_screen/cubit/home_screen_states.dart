@@ -1,51 +1,39 @@
 import 'package:e_commerce_flutter_app/domain/entinties/response/category/category_or_brand.dart';
 
-abstract class HomeScreenStates {}
+class HomeScreenState {
+  final bool isCategoriesLoading;
+  final bool isBrandsLoading;
 
-class HomeScreenInitialStates extends HomeScreenStates {}
+  final List<CategoryOrBrand> categoriesList;
+  final List<CategoryOrBrand> brandsList;
 
-class CategoriesLoadingState extends HomeScreenStates {}
+  final String? categoriesError;
+  final String? brandsError;
 
-class CategoriesErrorState extends HomeScreenStates {
-  final String message;
+  const HomeScreenState({
+    this.isCategoriesLoading = false,
+    this.isBrandsLoading = false,
+    this.categoriesList = const [],
+    this.brandsList = const [],
+    this.categoriesError,
+    this.brandsError,
+  });
 
-  CategoriesErrorState({required this.message});
-}
-
-// class CategoriesSuccessState extends HomeScreenStates {
-//   List<CategoryOrBrand>? categoriesList;
-//
-//   CategoriesSuccessState({required this.categoriesList});
-// }
-
-/// todo: brands states
-class BrandsLoadingState extends HomeScreenStates {}
-
-class BrandsErrorState extends HomeScreenStates {
-  final String message;
-
-  BrandsErrorState({required this.message});
-}
-
-// class BrandsSuccessState extends HomeScreenStates {
-//   List<CategoryOrBrand>? brandsList;
-//
-//   BrandsSuccessState({required this.brandsList});
-// }
-
-class HomeTabSuccessState extends HomeScreenStates {
-  List<CategoryOrBrand>? categoriesList;
-  List<CategoryOrBrand>? brandsList;
-
-  HomeTabSuccessState({this.categoriesList, this.brandsList});
-
-  HomeTabSuccessState copyWith({
+  HomeScreenState copyWith({
+    bool? isCategoriesLoading,
+    bool? isBrandsLoading,
     List<CategoryOrBrand>? categoriesList,
     List<CategoryOrBrand>? brandsList,
+    String? categoriesError,
+    String? brandsError,
   }) {
-    return HomeTabSuccessState(
+    return HomeScreenState(
+      isCategoriesLoading: isCategoriesLoading ?? this.isCategoriesLoading,
+      isBrandsLoading: isBrandsLoading ?? this.isBrandsLoading,
       categoriesList: categoriesList ?? this.categoriesList,
       brandsList: brandsList ?? this.brandsList,
+      categoriesError: categoriesError,
+      brandsError: brandsError,
     );
   }
 }

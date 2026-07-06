@@ -1,4 +1,3 @@
-
 import 'package:e_commerce_flutter_app/core/utlis/app_assets%20.dart';
 import 'package:e_commerce_flutter_app/domain/entinties/response/category/category_or_brand.dart';
 import 'package:e_commerce_flutter_app/features/ui/pages/tabs/home_screen/cubit/home_screen_states.dart';
@@ -14,7 +13,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../config/di.dart';
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -28,7 +26,6 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
-
 
 class _HomeScreenState extends State<HomeScreen> {
   final viewModel = getIt<HomeScreenViewModel>();
@@ -60,24 +57,27 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SizedBox(height: 12.h),
 
-          // Only the categories grid reacts to the Cubit
-          BlocBuilder<HomeScreenViewModel, HomeScreenStates>(
+          BlocBuilder<HomeScreenViewModel, HomeScreenState>(
             bloc: viewModel,
+            buildWhen: (previous, current) =>
+                previous.categoriesList != current.categoriesList ||
+                previous.isCategoriesLoading != current.isCategoriesLoading ||
+                previous.categoriesError != current.categoriesError,
             builder: (context, state) {
-              if (state is CategoriesErrorState) {
-                return MainErrorWidget(
-                  errorMessage: state.message, onPressed: () {
-                  viewModel.getCategories();
-                },);
-              }
-              else if (state is HomeTabSuccessState) {
-                return _buildCategoryBrandSec(
-                    categoryOrBrandList: state.categoriesList!);
-              }
-
-              else {
+              if (state.isCategoriesLoading) {
                 return MainLoadingWidget();
               }
+
+              if (state.categoriesError != null) {
+                return MainErrorWidget(
+                  errorMessage: state.categoriesError!,
+                  onPressed: viewModel.getCategories,
+                );
+              }
+
+              return _buildCategoryBrandSec(
+                categoryOrBrandList: state.categoriesList,
+              );
             },
           ),
 
@@ -90,25 +90,31 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SizedBox(height: 12.h),
 
-          BlocBuilder<HomeScreenViewModel, HomeScreenStates>(
+          BlocBuilder<HomeScreenViewModel, HomeScreenState>(
             bloc: viewModel,
+            buildWhen: (previous, current) =>
+                previous.brandsList != current.brandsList ||
+                previous.isBrandsLoading != current.isBrandsLoading ||
+                previous.brandsError != current.brandsError,
             builder: (context, state) {
-              if (state is BrandsErrorState) {
-                return MainErrorWidget(
-                  errorMessage: state.message, onPressed: () {
-                  viewModel.getBrands();
-                },);
-              }
-              else if (state is HomeTabSuccessState) {
-                return _buildCategoryBrandSec(
-                    categoryOrBrandList: state.brandsList!);
-              }
-
-              else {
+              if (state.isBrandsLoading) {
                 return MainLoadingWidget();
               }
-            },)
-          , SizedBox(height: 20.h),
+
+              if (state.brandsError != null) {
+                return MainErrorWidget(
+                  errorMessage: state.brandsError!,
+                  onPressed: viewModel.getBrands,
+                );
+              }
+
+              return _buildCategoryBrandSec(
+                categoryOrBrandList: state.brandsList,
+              );
+            },
+          ),
+
+          SizedBox(height: 20.h),
         ],
       ),
     );
@@ -129,8 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
           isLoop: true,
           children: images
               .map(
-                (img) =>
-                ClipRRect(
+                (img) => ClipRRect(
                   borderRadius: BorderRadius.circular(16.r),
                   child: Image.asset(
                     img,
@@ -138,15 +143,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: double.infinity,
                   ),
                 ),
-          )
+              )
               .toList(),
         ),
       ),
     );
   }
 
-  Widget _buildCategoryBrandSec(
-      {required List<CategoryOrBrand> categoryOrBrandList}) {
+  Widget _buildCategoryBrandSec({
+    required List<CategoryOrBrand> categoryOrBrandList,
+  }) {
     return SizedBox(
       height: 220.h, // try increasing this, e.g. 240.h, 260.h
       child: GridView.builder(
