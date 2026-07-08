@@ -1,5 +1,5 @@
 import 'package:e_commerce_flutter_app/api/model/response/common/category_or_brand_dto.dart';
-import 'package:e_commerce_flutter_app/api/model/response/product/sub_category_dto.dart';
+import 'package:e_commerce_flutter_app/api/model/response/common/sub_category_dto.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'product_dto.g.dart';

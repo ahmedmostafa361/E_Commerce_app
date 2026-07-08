@@ -9,7 +9,11 @@ class AppTextStyle {
     fontSize: 24,
     fontWeight: FontWeight.w600,
   );
-
+  static final TextStyle bold16Blue = GoogleFonts.poppins(
+    color: AppColors.primaryColor,
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+  );
   static final TextStyle bold28Blue = GoogleFonts.poppins(
     color: AppColors.primaryColor,
     fontSize: 28,

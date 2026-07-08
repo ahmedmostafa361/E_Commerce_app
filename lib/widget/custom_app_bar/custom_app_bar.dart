@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../core/utlis/app_assets .dart';
-import '../core/utlis/app_colors .dart';
-import '../core/utlis/app_text .dart';
-import '../features/ui/pages/cart_screen/cubit/cart_states.dart';
-import '../features/ui/pages/cart_screen/cubit/cart_view_model.dart';
+import '../../core/utlis/app_assets .dart';
+import '../../core/utlis/app_colors .dart';
+import '../../core/utlis/app_text .dart';
+import '../../features/ui/pages/cart_screen/cubit/cart_states.dart';
+import '../../features/ui/pages/cart_screen/cubit/cart_view_model.dart';
 
 /// Custom home app bar: logo on top, search field + cart icon (with a live
 /// item-count badge) below it — matches the provided design.

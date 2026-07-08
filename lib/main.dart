@@ -2,6 +2,7 @@ import 'package:e_commerce_flutter_app/core/cache_save_data/shared_prefrence.dar
 import 'package:e_commerce_flutter_app/core/utlis/app_routes%20.dart';
 import 'package:e_commerce_flutter_app/features/ui/auth/login_screen/login_screen.dart';
 import 'package:e_commerce_flutter_app/features/ui/auth/register_screen/register_screen.dart';
+import 'package:e_commerce_flutter_app/features/ui/pages/cart_screen/cart_screen.dart';
 import 'package:e_commerce_flutter_app/features/ui/pages/cart_screen/cubit/cart_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
             AppRoutes.loginScreen: (context) => const LoginScreen(),
             AppRoutes.registerScreen: (context) => const RegisterScreen(),
             AppRoutes.mainWrapperScreen: (context) => const MainWrapperScreen(),
+            AppRoutes.cartScreen: (context) => const CartScreen(),
             AppRoutes.productDetailsScreen: (
                 context) => const ProductDetailsScreen(),
           },

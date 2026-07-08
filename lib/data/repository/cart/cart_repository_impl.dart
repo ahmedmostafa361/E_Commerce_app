@@ -1,5 +1,6 @@
 import 'package:e_commerce_flutter_app/data/data_sources/remote/cart_remote_data_source.dart';
 import 'package:e_commerce_flutter_app/domain/entinties/response/add_cart/add_cart_response.dart';
+import 'package:e_commerce_flutter_app/domain/entinties/response/add_cart/get_cart_response.dart';
 import 'package:e_commerce_flutter_app/domain/repository/add_cart/cart_repository.dart';
 import 'package:injectable/injectable.dart';
 
@@ -12,5 +13,10 @@ class CartRepositoryImpl implements CartRepository {
   @override
   Future<AddCartResponse> addToCart(String productId) {
     return remoteDataSource.addToCart(productId);
+  }
+
+  @override
+  Future<GetCartResponse> getItemsCart() {
+    return remoteDataSource.getItemsCart();
   }
 }

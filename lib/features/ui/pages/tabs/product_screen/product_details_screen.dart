@@ -1,12 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:e_commerce_flutter_app/core/utlis/app_routes%20.dart';
+import 'package:e_commerce_flutter_app/widget/custom_app_bar/custom_app_bar_cart.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auto_size_text/flutter_auto_size_text.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../../core/cache_save_data/cart_variant_storage_for_size_color.dart';
 import '../../../../../core/utlis/app_colors .dart';
 import '../../../../../core/utlis/app_text .dart';
 import '../../../../../domain/entinties/response/products/product.dart';
+import '../../../../../widget/toast_bar_message.dart';
+import '../../cart_screen/cubit/cart_states.dart';
+import '../../cart_screen/cubit/cart_view_model.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen({super.key});
@@ -56,7 +62,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            _buildAppBar(context),
+            CustomAppBarCart(
+              titleText: 'Product Details',
+              onCartTap: () {
+                Navigator.of(context).pushNamed(AppRoutes.cartScreen);
+              },
+            ),
             Expanded(
               child: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -88,46 +99,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   // ---------------- App bar ----------------
-  Widget _buildAppBar(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-      child: Row(
-        children: [
-          IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: AppColors.primaryBlue,
-              size: 26.sp,
-            ),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          Expanded(
-            child: Text(
-              'Product Details',
-              textAlign: TextAlign.center,
-              style: AppTextStyle.bold14black.copyWith(fontSize: 22.sp),
-            ),
-          ),
-          IconButton(
-            icon: Icon(Icons.search, color: AppColors.primaryBlue, size: 26.sp),
-            onPressed: () {
-              // TODO: implement search
-            },
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.shopping_cart_outlined,
-              color: AppColors.primaryBlue,
-              size: 26.sp,
-            ),
-            onPressed: () {
-              // TODO: navigate to cart
-            },
-          ),
-        ],
-      ),
-    );
-  }
 
   // ---------------- Image slider ----------------
   Widget _buildImageSlider(List<String> images) {
@@ -456,7 +427,107 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   // ---------------- Bottom bar ----------------
+
+  // Widget _buildBottomBar(int totalPrice) {
+  //   return Container(
+  //     padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+  //     decoration: BoxDecoration(
+  //       color: Colors.white,
+  //       boxShadow: [
+  //         BoxShadow(
+  //           color: Colors.black.withValues(alpha: 0.06),
+  //           blurRadius: 10,
+  //           offset: const Offset(0, -4),
+  //         ),
+  //       ],
+  //     ),
+  //     child: SafeArea(
+  //       top: false,
+  //       child: Row(
+  //         children: [
+  //           Expanded(
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               mainAxisSize: MainAxisSize.min,
+  //               children: [
+  //                 Text(
+  //                   'Total price',
+  //                   style: AppTextStyle.normal12grey.copyWith(fontSize: 14.sp),
+  //                 ),
+  //                 AutoSizeText(
+  //                   'EGP $totalPrice',
+  //                   style: AppTextStyle.bold14black.copyWith(fontSize: 20.sp),
+  //                   maxLines: 1,
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //           SizedBox(width: 14.w),
+  //           Expanded(
+  //             flex: 2,
+  //             child: ElevatedButton.icon(
+  //               onPressed: () {
+  //                 _handleAddToCart(context, product);
+  //                 // TODO: call add-to-cart use case with:
+  //                 // product.id, _quantity, fakeSizes[_selectedSizeIndex], fakeColors[_selectedColorIndex]
+  //               },
+  //               style: ElevatedButton.styleFrom(
+  //                 backgroundColor: AppColors.primaryBlue,
+  //                 padding: EdgeInsets.symmetric(vertical: 16.h),
+  //                 shape: RoundedRectangleBorder(
+  //                   borderRadius: BorderRadius.circular(32.r),
+  //                 ),
+  //               ),
+  //               icon: Icon(
+  //                 Icons.shopping_cart,
+  //                 color: Colors.white,
+  //                 size: 22.sp,
+  //               ),
+  //               label: AutoSizeText(
+  //                 'Add to cart',
+  //                 style: AppTextStyle.normal18White.copyWith(fontSize: 17.sp),
+  //                 maxLines: 1,
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  // --- Add these inside _ProductDetailsScreenState, alongside your existing
+  // methods. Only the onPressed body of the button changed — everything else
+  // in your _buildBottomBar is untouched. ---
+
+  Future<void> _handleAddToCart(BuildContext context, Product product) async {
+    final cartViewModel = CartViewModel.get(context);
+    await cartViewModel.addToCart(product.id ?? '');
+
+    if (!context.mounted) return;
+
+    final state = cartViewModel.state;
+    if (state is AddCartSuccessState) {
+      // Real backend call succeeded — now remember the chosen color/size
+      // locally (on-device only) so the Cart screen can display it, since
+      // the API itself doesn't accept or return variant data.
+      await CartVariantsStorage.saveVariant(
+        productId: product.id ?? '',
+        colorValue: fakeColors[_selectedColorIndex].value,
+        size: fakeSizes[_selectedSizeIndex],
+      );
+
+      if (context.mounted) {
+        AppToast.success(context, 'Item added successfully');
+      }
+    } else if (state is AddCartErrorState) {
+      AppToast.error(context, state.message);
+    }
+  }
+
   Widget _buildBottomBar(int totalPrice) {
+    final product = ModalRoute.of(context)!.settings.arguments as Product;
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
       decoration: BoxDecoration(
@@ -494,10 +565,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             Expanded(
               flex: 2,
               child: ElevatedButton.icon(
-                onPressed: () {
-                  // TODO: call add-to-cart use case with:
-                  // product.id, _quantity, fakeSizes[_selectedSizeIndex], fakeColors[_selectedColorIndex]
-                },
+                onPressed: () => _handleAddToCart(context, product),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryBlue,
                   padding: EdgeInsets.symmetric(vertical: 16.h),
