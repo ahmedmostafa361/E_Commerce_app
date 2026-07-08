@@ -4,4 +4,5 @@ class AppRoutes {
   static const String registerScreen = 'register_screen';
   static const String mainWrapperScreen = 'mainWrapper_screen';
   static const String productDetailsScreen = 'product_DetailsScreen';
+  static const String cartScreen = 'cart_screen';
 }

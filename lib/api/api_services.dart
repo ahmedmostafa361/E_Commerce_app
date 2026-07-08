@@ -6,6 +6,7 @@ import 'package:e_commerce_flutter_app/api/model/request/register_request_dto.da
 import 'package:e_commerce_flutter_app/api/model/response/auth/auth_response_dto.dart';
 import 'package:e_commerce_flutter_app/api/model/response/brands/brands_response_dto.dart';
 import 'package:e_commerce_flutter_app/api/model/response/cart/add_cart/add_cart_response_dto.dart';
+import 'package:e_commerce_flutter_app/api/model/response/cart/get_cart/get_cart_response_dto.dart';
 import 'package:e_commerce_flutter_app/api/model/response/category/category_response_dto.dart';
 import 'package:e_commerce_flutter_app/api/model/response/product/product_response_dto.dart';
 import 'package:retrofit/retrofit.dart';
@@ -42,4 +43,7 @@ abstract class ApiServices {
   Future<AddCartResponseDto> addToCart(
       @Body() AddProductRequestDto productRequest,
       @Header('token') String token,);
+
+  @GET(EndPoints.cartApi)
+  Future<GetCartResponseDto> getItemsInCart(@Header('token') String token,);
 }
