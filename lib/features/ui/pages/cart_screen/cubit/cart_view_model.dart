@@ -5,15 +5,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../../core/exceptions/app_exception.dart';
+import '../../../../../domain/use_cases/delete_items_cart_use_case.dart';
 import '../../../../../domain/use_cases/get_items_cart_use_case.dart';
+import '../../../../../domain/use_cases/update_items_cart_use_case.dart';
 
 @injectable
 class CartViewModel extends Cubit<AddCartStates> {
   AddToCartUseCase addToCartUseCase;
   GetItemsCartUseCase getItemsCartUseCase;
+  DeleteItemsCartUseCase deleteItemsCartUseCase;
+  UpdateItemsCartUseCase updateItemsCartUseCase;
 
-  CartViewModel(
-      {required this.addToCartUseCase, required this.getItemsCartUseCase})
+
+  CartViewModel({required this.addToCartUseCase,
+    required this.getItemsCartUseCase,
+    required this.deleteItemsCartUseCase,
+    required this.updateItemsCartUseCase})
       : super(CartInitialStates());
   int numOfCartItems = 0;
 
@@ -46,4 +53,33 @@ class CartViewModel extends Cubit<AddCartStates> {
       emit(GetCartErrorState(message: e.errorMessage));
     }
   }
+
+  /// delete cart view model
+  Future<void> deleteItemsCart(String productId) async {
+    try {
+      emit(DeleteItemInCartLoadingState());
+
+      var deleteCartResponse = await deleteItemsCartUseCase.invoke(productId);
+      numOfCartItems = deleteCartResponse.numOfCartItems ?? 0;
+      // productsList = deleteCartResponse.data!.products ?? []; dont need it the state already cover it
+      emit(DeleteItemInCartSuccessState(getCart: deleteCartResponse.data!));
+    } on AppException catch (e) {
+      emit(DeleteItemInCartErrorState(message: e.errorMessage));
+    }
+  }
+
+  /// update cart view model
+  Future<void> updateItemsInCart(String productId, int count) async {
+    try {
+      var updateItemInCartResponse = await updateItemsCartUseCase.invoke(
+          productId, count);
+      // numOfCartItems = updateItemInCartResponse.numOfCartItems ?? 0; dont need it here if need it use it
+      // productsList = deleteCartResponse.data!.products ?? []; dont need it the state already cover it if need it use it
+      emit(UpdateItemInCartSuccessState(
+          getCart: updateItemInCartResponse.data!));
+    } on AppException catch (e) {
+      emit(UpdateItemInCartErrorState(message: e.errorMessage));
+    }
+  }
+
 }

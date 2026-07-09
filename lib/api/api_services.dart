@@ -11,6 +11,8 @@ import 'package:e_commerce_flutter_app/api/model/response/category/category_resp
 import 'package:e_commerce_flutter_app/api/model/response/product/product_response_dto.dart';
 import 'package:retrofit/retrofit.dart';
 
+import 'model/request/count_request_dto.dart';
+
 part 'api_services.g.dart';
 
 @RestApi(baseUrl: EndPoints.baseUrl)
@@ -46,4 +48,13 @@ abstract class ApiServices {
 
   @GET(EndPoints.cartApi)
   Future<GetCartResponseDto> getItemsInCart(@Header('token') String token,);
+
+  @DELETE(EndPoints.deleteItemCartApi)
+  Future<GetCartResponseDto> deleteItemsInCart(@Path() String productId,
+      @Header('token') String token,);
+
+  @PUT(EndPoints.deleteItemCartApi)
+  Future<GetCartResponseDto> updateCountInCart(@Path() String productId,
+      @Header('token') String token,
+      @Body() CountRequestDto countRequestDto,);
 }

@@ -6,4 +6,5 @@ class EndPoints {
   static const String brandsApi = '/api/v1/brands';
   static const String productsApi = '/api/v1/products';
   static const String cartApi = '/api/v1/cart';
+  static const String deleteItemCartApi = '/api/v1/cart/{productId}';
 }
