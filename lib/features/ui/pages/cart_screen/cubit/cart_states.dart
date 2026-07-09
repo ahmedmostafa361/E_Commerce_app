@@ -33,3 +33,33 @@ class GetCartErrorState extends AddCartStates {
 
   GetCartErrorState({required this.message});
 }
+
+/// delete & update cart states
+
+class DeleteItemInCartLoadingState extends AddCartStates {}
+
+class DeleteItemInCartSuccessState extends AddCartStates {
+  GetCart getCart;
+
+  DeleteItemInCartSuccessState({required this.getCart});
+}
+
+class DeleteItemInCartErrorState extends AddCartStates {
+  final String message;
+
+  DeleteItemInCartErrorState({required this.message});
+}
+
+class UpdateItemInCartLoadingState extends AddCartStates {}
+
+class UpdateItemInCartSuccessState extends AddCartStates {
+  GetCart getCart;
+
+  UpdateItemInCartSuccessState({required this.getCart});
+}
+
+class UpdateItemInCartErrorState extends AddCartStates {
+  final String message;
+
+  UpdateItemInCartErrorState({required this.message});
+}
