@@ -1,14 +1,14 @@
-import 'package:e_commerce_flutter_app/core/utlis/app_routes%20.dart';
-import 'package:e_commerce_flutter_app/features/ui/auth/auth_states.dart';
-import 'package:e_commerce_flutter_app/features/ui/auth/register_screen/cubit/register_view_model.dart';
-import 'package:flutter/material.dart';
 import 'package:e_commerce_flutter_app/core/utlis/app_assets%20.dart';
 import 'package:e_commerce_flutter_app/core/utlis/app_colors%20.dart';
+import 'package:e_commerce_flutter_app/core/utlis/app_routes%20.dart';
 import 'package:e_commerce_flutter_app/core/utlis/app_text%20.dart';
 import 'package:e_commerce_flutter_app/core/utlis/app_validators.dart';
+import 'package:e_commerce_flutter_app/features/ui/auth/auth_states.dart';
+import 'package:e_commerce_flutter_app/features/ui/auth/register_screen/cubit/register_view_model.dart';
 import 'package:e_commerce_flutter_app/widget/custom_elevated_button%20.dart';
 import 'package:e_commerce_flutter_app/widget/custom_text_form_field%20.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -60,7 +60,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 Padding(
                   padding:  EdgeInsets.only(bottom: 46.h,top: 91.h,left: 96.w,right: 97.w),
-                  child: Image(image: AssetImage(AppAssets.eCommerce)),
+                  child: Image(image: AssetImage(AppAssets.logoECommerce)),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),

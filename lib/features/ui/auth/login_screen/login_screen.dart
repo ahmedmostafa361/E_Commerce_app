@@ -24,7 +24,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController(
-    text: 'ahmedmostafa@gmail.com',
+    text: 'ahmed3221@gmail.com',
   );
 
   TextEditingController passwordController =
@@ -83,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     left: 96.w,
                     right: 97.w,
                   ),
-                  child: Image(image: AssetImage(AppAssets.eCommerce)),
+                  child: Image(image: AssetImage(AppAssets.logoECommerce)),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),

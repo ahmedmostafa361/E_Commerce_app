@@ -22,7 +22,6 @@ class ProductTabItem extends StatefulWidget {
 class _ProductTabItemState extends State<ProductTabItem> {
   late bool isFavourite; // TODO: wire this up to real favourite logic/API later
 
-
   @override
   void initState() {
     super.initState();
@@ -32,6 +31,7 @@ class _ProductTabItemState extends State<ProductTabItem> {
     isFavourite =
         wishListViewModel.whishList.any((item) => item.id == productId);
   }
+
   @override
   Widget build(BuildContext context) {
     final product = widget.product;
@@ -39,16 +39,24 @@ class _ProductTabItemState extends State<ProductTabItem> {
     final realPrice = product.price ?? 0;
     final fakeOriginalPrice =
         realPrice * 2; // TODO: remove this once real API sends discount data
+    // TODO: compute from real discount data once available, e.g.
+    // (((fakeOriginalPrice - realPrice) / fakeOriginalPrice) * 100).round()
+    const discountPercent = 50;
 
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(20.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: AppColors.primaryBlue.withOpacity(0.08),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -56,7 +64,7 @@ class _ProductTabItemState extends State<ProductTabItem> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ---- Image + favourite icon ----
+          // ---- Image + discount badge + favourite icon ----
           Expanded(
             flex: 5,
             child: Stack(
@@ -87,16 +95,66 @@ class _ProductTabItemState extends State<ProductTabItem> {
                 ),
                 Positioned(
                   top: 8.h,
+                  left: 8.w,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 8.w, vertical: 4.h),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          AppColors.redColor,
+                          AppColors.redColor.withOpacity(0.8)
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(8.r),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.redColor.withOpacity(0.35),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      '-$discountPercent%',
+                      style: AppTextStyle.normal12grey.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 10.sp,
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 8.h,
                   right: 8.w,
                   child: GestureDetector(
                     onTap: _toggleFavourite,
-                    child: CircleAvatar(
-                      radius: 16.r,
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        isFavourite ? Icons.favorite : Icons.favorite_border,
-                        size: 18.sp,
-                        color: AppColors.redColor,
+                    child: Container(
+                      padding: EdgeInsets.all(6.w),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.12),
+                            blurRadius: 6,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 250),
+                        transitionBuilder: (child, animation) =>
+                            ScaleTransition(scale: animation, child: child),
+                        child: Icon(
+                          isFavourite ? Icons.favorite : Icons.favorite_border,
+                          key: ValueKey<bool>(isFavourite),
+                          size: 16.sp,
+                          color: AppColors.redColor,
+                        ),
                       ),
                     ),
                   ),
@@ -144,7 +202,10 @@ class _ProductTabItemState extends State<ProductTabItem> {
                       Flexible(
                         child: AutoSizeText(
                           'EGP $realPrice',
-                          style: AppTextStyle.bold14black,
+                          style: AppTextStyle.bold14black.copyWith(
+                            color: AppColors.primaryBlue,
+                            fontWeight: FontWeight.w700,
+                          ),
                           maxLines: 1,
                           minFontSize: 10,
                           overflow: TextOverflow.ellipsis,
@@ -168,38 +229,62 @@ class _ProductTabItemState extends State<ProductTabItem> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Flexible(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.star, size: 14.sp, color: Colors.amber),
-                            SizedBox(width: 2.w),
-                            Flexible(
-                              child: AutoSizeText(
-                                '(${product.ratingsAverage?.toStringAsFixed(
-                                    1) ?? '0.0'})',
-                                style: AppTextStyle.normal12grey,
-                                maxLines: 1,
-                                minFontSize: 9,
-                                overflow: TextOverflow.ellipsis,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 6.w, vertical: 3.h),
+                          decoration: BoxDecoration(
+                            color: Colors.amber.withOpacity(0.12),
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                  Icons.star, size: 14.sp, color: Colors.amber),
+                              SizedBox(width: 2.w),
+                              Flexible(
+                                child: AutoSizeText(
+                                  '(${product.ratingsAverage?.toStringAsFixed(
+                                      1) ?? '0.0'})',
+                                  style: AppTextStyle.normal12grey,
+                                  maxLines: 1,
+                                  minFontSize: 9,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       InkWell(
+                        borderRadius: BorderRadius.circular(20.r),
                         onTap: () {
                           // TODO: add to cart use case
                           CartViewModel.get(context).addToCart(product.id ??
                               '');
                         },
-                        child: CircleAvatar(
-                          radius: 14.r,
-                          backgroundColor: AppColors.primaryBlue,
-                          child: Icon(
-                            Icons.add,
-                            size: 16.sp,
-                            color: Colors.white,
+                        child: Container(
+                          padding: EdgeInsets.all(7.w),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [
+                                AppColors.primaryBlue,
+                                AppColors.primaryBlue.withOpacity(0.75),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.primaryBlue.withOpacity(0.35),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
                           ),
+                          child: Icon(Icons.add, size: 16.sp, color: Colors
+                              .white),
                         ),
                       ),
                     ],
@@ -213,29 +298,6 @@ class _ProductTabItemState extends State<ProductTabItem> {
     );
   }
 
-  // Future<void> _toggleFavourite() async {
-  //   final productId = widget.product.id ?? '';
-  //   if (productId.isEmpty) return;
-  //
-  //   if (isFavourite) {
-  //     // TODO: call your remove-from-wishlist use case here once it's ready.
-  //     // No remove endpoint exists yet, so we just toggle the UI off for now.
-  //     setState(() => isFavourite = false);
-  //     return;
-  //   }
-  //
-  //   setState(() => isFavourite = true); // optimistic — feels instant
-  //
-  //   final whishListViewModel = WhishListViewModel.get(context);
-  //   await whishListViewModel.addToWhishList(productId);
-  //
-  //   if (!mounted) return;
-  //   if (whishListViewModel.state is AddWhishListErrorState) {
-  //     setState(() => isFavourite = false); // roll back — the API call failed
-  //   }
-  //   // Success case needs nothing else here — the screen-level BlocListener
-  //   // (added below in ProductScreen) handles the toast.
-  // }
   Future<void> _toggleFavourite() async {
     final productId = widget.product.id ?? '';
     if (productId.isEmpty) return;

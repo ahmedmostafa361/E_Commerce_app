@@ -141,7 +141,7 @@ class _WishlistItemState extends State<WishlistItem> {
                     Expanded(
                       child: Text(
                         title,
-                        style: AppTextStyle.bold16Blue,
+                        style: AppTextStyle.bold18PrimaryBlue,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -152,7 +152,7 @@ class _WishlistItemState extends State<WishlistItem> {
                       behavior: HitTestBehavior.opaque,
                       child: Icon(
                         Icons.favorite,
-                        color: AppColors.primaryColor,
+                        color: AppColors.primaryBlue,
                         size: 22.sp,
                       ),
                     ),
@@ -161,7 +161,7 @@ class _WishlistItemState extends State<WishlistItem> {
                 SizedBox(height: 10.h),
                 Row(
                   children: [
-                    Text('EGP $realPrice', style: AppTextStyle.bold16Blue),
+                    Text('EGP $realPrice', style: AppTextStyle.bold16Black),
                     SizedBox(width: 6.w),
                     Text(
                       'EGP $fakeOriginalPrice',
@@ -179,7 +179,7 @@ class _WishlistItemState extends State<WishlistItem> {
                     height: 32.h,
                     child: CustomElevatedButton(
                       onPressed: _handleAddToCart,
-                      backgroundColor: AppColors.primaryColor,
+                      backgroundColor: AppColors.primaryBlue,
                       padding: EdgeInsets.symmetric(horizontal: 16.w),
                       hasIcon: true,
                       customInButton: _isAddingToCart
@@ -194,7 +194,7 @@ class _WishlistItemState extends State<WishlistItem> {
                           : Text(
                               'Add to Cart',
                               style: AppTextStyle.normal16White.copyWith(
-                                fontSize: 13.sp,
+                                fontSize: 14.sp,
                               ),
                             ),
                     ),

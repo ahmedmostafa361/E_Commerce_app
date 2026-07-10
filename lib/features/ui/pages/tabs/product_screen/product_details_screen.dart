@@ -29,7 +29,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   int _quantity = 1;
   int _selectedSizeIndex = 2; // default matches design (size "40" pre-selected)
   int _selectedColorIndex =
-      1; // default matches design (2nd color pre-selected)
+  1; // default matches design (2nd color pre-selected)
   bool _isFavourite = false;
   bool _isDescriptionExpanded = false;
 
@@ -50,10 +50,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     final product = ModalRoute.of(context)!.settings.arguments as Product;
 
     if (_isFirstLoad) {
@@ -110,45 +108,57 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  // ---------------- App bar ----------------
-
   // ---------------- Image slider ----------------
   Widget _buildImageSlider(List<String> images, Product productId) {
     return Stack(
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(24.r),
-          child: SizedBox(
-            height: 320.h,
-            width: double.infinity,
-            child: PageView.builder(
-              controller: _pageController,
-              itemCount: images.length,
-              onPageChanged: (index) =>
-                  setState(() => _currentImageIndex = index),
-              itemBuilder: (context, index) {
-                return CachedNetworkImage(
-                  imageUrl: images[index],
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => Container(
-                    color: Colors.grey.shade200,
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: AppColors.redColor,
-                      ),
-                    ),
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    color: Colors.grey.shade200,
-                    child: Icon(
-                      Icons.error_outline,
-                      color: AppColors.redColor,
-                      size: 32.sp,
-                    ),
-                  ),
-                );
-              },
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24.r),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.10),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24.r),
+            child: SizedBox(
+              height: 320.h,
+              width: double.infinity,
+              child: PageView.builder(
+                controller: _pageController,
+                itemCount: images.length,
+                onPageChanged: (index) =>
+                    setState(() => _currentImageIndex = index),
+                itemBuilder: (context, index) {
+                  return CachedNetworkImage(
+                    imageUrl: images[index],
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) =>
+                        Container(
+                          color: Colors.grey.shade200,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: AppColors.redColor,
+                            ),
+                          ),
+                        ),
+                    errorWidget: (context, url, error) =>
+                        Container(
+                          color: Colors.grey.shade200,
+                          child: Icon(
+                            Icons.error_outline,
+                            color: AppColors.redColor,
+                            size: 32.sp,
+                          ),
+                        ),
+                  );
+                },
+              ),
             ),
           ),
         ),
@@ -159,13 +169,29 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           child: GestureDetector(
             onTap: () => _toggleFavourite(productId),
             // `productId` param is actually the Product
-            child: CircleAvatar(
-              radius: 22.r,
-              backgroundColor: Colors.white,
-              child: Icon(
-                _isFavourite ? Icons.favorite : Icons.favorite_border,
-                color: AppColors.primaryBlue,
-                size: 24.sp,
+            child: Container(
+              padding: EdgeInsets.all(9.w),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.15),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 250),
+                transitionBuilder: (child, animation) =>
+                    ScaleTransition(scale: animation, child: child),
+                child: Icon(
+                  _isFavourite ? Icons.favorite : Icons.favorite_border,
+                  key: ValueKey<bool>(_isFavourite),
+                  color: AppColors.primaryBlue,
+                  size: 24.sp,
+                ),
               ),
             ),
           ),
@@ -182,14 +208,21 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 final isActive = index == _currentImageIndex;
                 return AnimatedContainer(
                   duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeOut,
                   margin: EdgeInsets.symmetric(horizontal: 4.w),
                   width: isActive ? 22.w : 8.w,
                   height: 8.h,
                   decoration: BoxDecoration(
-                    color: isActive
-                        ? AppColors.primaryBlue
-                        : Colors.grey.shade300,
+                    color:
+                    isActive ? AppColors.primaryBlue : Colors.white.withOpacity(
+                        0.8),
                     borderRadius: BorderRadius.circular(5.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.15),
+                        blurRadius: 4,
+                      ),
+                    ],
                   ),
                 );
               }),
@@ -246,7 +279,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         SizedBox(width: 10.w),
         AutoSizeText(
           'EGP $realPrice',
-          style: AppTextStyle.bold14black.copyWith(fontSize: 22.sp),
+          style: AppTextStyle.bold14black.copyWith(
+            fontSize: 22.sp,
+            color: AppColors.primaryBlue,
+            fontWeight: FontWeight.w800,
+          ),
           maxLines: 1,
           minFontSize: 14,
         ),
@@ -262,7 +299,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey.shade300),
+            color: AppColors.primaryBlue.withOpacity(0.06),
             borderRadius: BorderRadius.circular(24.r),
           ),
           child: AutoSizeText(
@@ -274,20 +311,28 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         SizedBox(width: 12.w),
         // rating
         Flexible(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.star, size: 20.sp, color: Colors.amber),
-              SizedBox(width: 4.w),
-              Flexible(
-                child: AutoSizeText(
-                  '${product.ratingsAverage?.toStringAsFixed(1) ?? '0.0'} (${product.ratingsQuantity ?? 0})',
-                  style: AppTextStyle.normal12grey.copyWith(fontSize: 14.sp),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+            decoration: BoxDecoration(
+              color: Colors.amber.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(24.r),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.star, size: 18.sp, color: Colors.amber),
+                SizedBox(width: 4.w),
+                Flexible(
+                  child: AutoSizeText(
+                    '${product.ratingsAverage?.toStringAsFixed(1) ??
+                        '0.0'} (${product.ratingsQuantity ?? 0})',
+                    style: AppTextStyle.normal12grey.copyWith(fontSize: 14.sp),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         const Spacer(),
@@ -295,8 +340,21 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
           decoration: BoxDecoration(
-            color: AppColors.primaryBlue,
+            gradient: LinearGradient(
+              colors: [AppColors.primaryBlue, AppColors.primaryBlue.withOpacity(
+                  0.8)
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
             borderRadius: BorderRadius.circular(24.r),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.primaryBlue.withOpacity(0.3),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -368,11 +426,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               TextSpan(text: description),
               TextSpan(
                 text: _isDescriptionExpanded ? '  Show less' : '  Read More',
-                style: AppTextStyle.bold14black.copyWith(fontSize: 16.sp),
+                style: AppTextStyle.bold14black.copyWith(
+                  fontSize: 16.sp,
+                  color: AppColors.primaryBlue,
+                ),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
                     setState(
-                      () => _isDescriptionExpanded = !_isDescriptionExpanded,
+                          () =>
+                      _isDescriptionExpanded = !_isDescriptionExpanded,
                     );
                   },
               ),
@@ -398,21 +460,29 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             final isSelected = index == _selectedSizeIndex;
             return GestureDetector(
               onTap: () => setState(() => _selectedSizeIndex = index),
-              child: Container(
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
                 width: 52.w,
                 height: 52.w,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: isSelected
-                      ? AppColors.primaryBlue
-                      : Colors.transparent,
+                  color: isSelected ? AppColors.primaryBlue : Colors
+                      .transparent,
                   border: Border.all(
-                    color: isSelected
-                        ? AppColors.primaryBlue
-                        : Colors.grey.shade300,
+                    color:
+                    isSelected ? AppColors.primaryBlue : Colors.grey.shade300,
                     width: 1.5,
                   ),
+                  boxShadow: isSelected
+                      ? [
+                    BoxShadow(
+                      color: AppColors.primaryBlue.withOpacity(0.35),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                      : null,
                 ),
                 child: AutoSizeText(
                   fakeSizes[index],
@@ -447,17 +517,36 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             final isSelected = index == _selectedColorIndex;
             return GestureDetector(
               onTap: () => setState(() => _selectedColorIndex = index),
-              child: Container(
-                width: 42.w,
-                height: 42.w,
-                alignment: Alignment.center,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: EdgeInsets.all(isSelected ? 3.w : 0),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: fakeColors[index],
+                  border: isSelected
+                      ? Border.all(color: fakeColors[index], width: 2)
+                      : null,
+                  boxShadow: isSelected
+                      ? [
+                    BoxShadow(
+                      color: fakeColors[index].withOpacity(0.45),
+                      blurRadius: 8,
+                      offset: const Offset(0, 3),
+                    ),
+                  ]
+                      : null,
                 ),
-                child: isSelected
-                    ? Icon(Icons.check, color: Colors.white, size: 20.sp)
-                    : null,
+                child: Container(
+                  width: 42.w,
+                  height: 42.w,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: fakeColors[index],
+                  ),
+                  child: isSelected
+                      ? Icon(Icons.check, color: Colors.white, size: 20.sp)
+                      : null,
+                ),
               ),
             );
           }),
@@ -465,76 +554,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       ],
     );
   }
-
-  // ---------------- Bottom bar ----------------
-
-  // Widget _buildBottomBar(int totalPrice) {
-  //   return Container(
-  //     padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-  //     decoration: BoxDecoration(
-  //       color: Colors.white,
-  //       boxShadow: [
-  //         BoxShadow(
-  //           color: Colors.black.withValues(alpha: 0.06),
-  //           blurRadius: 10,
-  //           offset: const Offset(0, -4),
-  //         ),
-  //       ],
-  //     ),
-  //     child: SafeArea(
-  //       top: false,
-  //       child: Row(
-  //         children: [
-  //           Expanded(
-  //             child: Column(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               mainAxisSize: MainAxisSize.min,
-  //               children: [
-  //                 Text(
-  //                   'Total price',
-  //                   style: AppTextStyle.normal12grey.copyWith(fontSize: 14.sp),
-  //                 ),
-  //                 AutoSizeText(
-  //                   'EGP $totalPrice',
-  //                   style: AppTextStyle.bold14black.copyWith(fontSize: 20.sp),
-  //                   maxLines: 1,
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //           SizedBox(width: 14.w),
-  //           Expanded(
-  //             flex: 2,
-  //             child: ElevatedButton.icon(
-  //               onPressed: () {
-  //                 _handleAddToCart(context, product);
-  //                 // TODO: call add-to-cart use case with:
-  //                 // product.id, _quantity, fakeSizes[_selectedSizeIndex], fakeColors[_selectedColorIndex]
-  //               },
-  //               style: ElevatedButton.styleFrom(
-  //                 backgroundColor: AppColors.primaryBlue,
-  //                 padding: EdgeInsets.symmetric(vertical: 16.h),
-  //                 shape: RoundedRectangleBorder(
-  //                   borderRadius: BorderRadius.circular(32.r),
-  //                 ),
-  //               ),
-  //               icon: Icon(
-  //                 Icons.shopping_cart,
-  //                 color: Colors.white,
-  //                 size: 22.sp,
-  //               ),
-  //               label: AutoSizeText(
-  //                 'Add to cart',
-  //                 style: AppTextStyle.normal18White.copyWith(fontSize: 17.sp),
-  //                 maxLines: 1,
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 
   // --- Add these inside _ProductDetailsScreenState, alongside your existing
   // methods. Only the onPressed body of the button changed — everything else
@@ -569,14 +588,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     final product = ModalRoute.of(context)!.settings.arguments as Product;
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+      padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 16.h),
       decoration: BoxDecoration(
         color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(24.r),
+          topRight: Radius.circular(24.r),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 10,
-            offset: const Offset(0, -4),
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 16,
+            offset: const Offset(0, -6),
           ),
         ],
       ),
@@ -595,7 +618,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ),
                   AutoSizeText(
                     'EGP $totalPrice',
-                    style: AppTextStyle.bold14black.copyWith(fontSize: 20.sp),
+                    style: AppTextStyle.bold14black.copyWith(
+                      fontSize: 20.sp,
+                      color: AppColors.primaryBlue,
+                      fontWeight: FontWeight.w800,
+                    ),
                     maxLines: 1,
                   ),
                 ],
@@ -604,24 +631,37 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             SizedBox(width: 14.w),
             Expanded(
               flex: 2,
-              child: ElevatedButton.icon(
-                onPressed: () => _handleAddToCart(context, product),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryBlue,
-                  padding: EdgeInsets.symmetric(vertical: 16.h),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(32.r),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(32.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primaryBlue.withOpacity(0.35),
+                      blurRadius: 14,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
+                ),
+                child: ElevatedButton.icon(
+                  onPressed: () => _handleAddToCart(context, product),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryBlue,
+                    padding: EdgeInsets.symmetric(vertical: 16.h),
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(32.r),
+                    ),
                   ),
-                ),
-                icon: Icon(
-                  Icons.shopping_cart,
-                  color: Colors.white,
-                  size: 22.sp,
-                ),
-                label: AutoSizeText(
-                  'Add to cart',
-                  style: AppTextStyle.normal18White.copyWith(fontSize: 17.sp),
-                  maxLines: 1,
+                  icon: Icon(
+                    Icons.shopping_cart,
+                    color: Colors.white,
+                    size: 22.sp,
+                  ),
+                  label: AutoSizeText(
+                    'Add to cart',
+                    style: AppTextStyle.normal18White.copyWith(fontSize: 17.sp),
+                    maxLines: 1,
+                  ),
                 ),
               ),
             ),
