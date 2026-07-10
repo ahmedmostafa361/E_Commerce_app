@@ -31,12 +31,6 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text('Wishlist'),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-      ),
       body: BlocListener<WhishListViewModel, AddWhishListStates>(
         listener: (context, state) {
           if (state is DeleteItemInWhishListSuccessState) {
@@ -69,10 +63,12 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
               return _buildEmptyState();
             }
 
-            // Show the list (allows pull-to-refresh)
+            /// Show the list (allows pull-to-refresh)
             return RefreshIndicator(
               onRefresh: () => viewModel.getItemsWhishList(),
               color: Colors.blue,
+
+              /// scroll indicator
               child: ListView.builder(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
                 itemCount: viewModel.whishList.length,

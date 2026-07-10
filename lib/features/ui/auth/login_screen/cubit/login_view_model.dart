@@ -6,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../../../../core/cache_save_data/auth_local_storage.dart';
+import '../../../../../core/cache_save_data/shared_prefrence.dart';
 import '../../../../../domain/use_cases/login_use_cases.dart';
 
 @injectable
@@ -14,29 +16,59 @@ class LoginViewModel extends Cubit<AuthStates>{ /// Think of Cubit as: A control
   LoginViewModel({required this.loginUseCases}): super(AuthLoadingStates());
   ///todo: hold data -- handle logic
   var formKey = GlobalKey<FormState>();
- void login(String email, String password) async{/// Cubit holds business logic and controls UI state, and emit sends new states that rebuild or react in the UI(in block builder or listener states).
-   try{
-     if(formKey.currentState?.validate() == true){
-       emit(AuthLoadingStates());
-       LoginRequest loginRequest = LoginRequest(
-           email: email,
-           password: password
-       );
-       var authResponse =await loginUseCases.invoke(loginRequest);
-       emit(AuthSuccessStates(authResponse: authResponse));
-     }
-   } on AppException catch(e){
-     emit(AuthErrorStates(errorMessage: e.errorMessage));
-   } on DioException catch(e){
-     final message = (e.error is AppException)?
-     (e.error as AppException).errorMessage:
-         'UnExpected error';
-     emit(AuthErrorStates(errorMessage: message));
-   }
 
+//  void login(String email, String password) async{/// Cubit holds business logic and controls UI state, and emit sends new states that rebuild or react in the UI(in block builder or listener states).
+//    try{
+//      if(formKey.currentState?.validate() == true){
+//        emit(AuthLoadingStates());
+//        LoginRequest loginRequest = LoginRequest(
+//            email: email,
+//            password: password
+//        );
+//        var authResponse =await loginUseCases.invoke(loginRequest);
+//        emit(AuthSuccessStates(authResponse: authResponse));
+//      }
+//    } on AppException catch(e){
+//      emit(AuthErrorStates(errorMessage: e.errorMessage));
+//    } on DioException catch(e){
+//      final message = (e.error is AppException)?
+//      (e.error as AppException).errorMessage:
+//          'UnExpected error';
+//      emit(AuthErrorStates(errorMessage: message));
+//    }
+//
+//
+// }
+  void login(String email, String password) async {
+    try {
+      if (formKey.currentState?.validate() == true) {
+        emit(AuthLoadingStates());
+        LoginRequest loginRequest = LoginRequest(
+            email: email, password: password);
+        var authResponse = await loginUseCases.invoke(loginRequest);
 
-}
+        // NEW — persist the token + user locally so the app can identify the
+        // logged-in user later (e.g. on ProfileScreen), same as the existing
+        // token-saving pattern already used elsewhere in the app.
+        if (authResponse.token != null) {
+          await SharedPreferencesUtils.saveData(
+              key: 'token', value: authResponse.token);
+        }
+        if (authResponse.user != null) {
+          await AuthLocalStorage.saveUser(authResponse.user!);
+        }
 
+        emit(AuthSuccessStates(authResponse: authResponse));
+      }
+    } on AppException catch (e) {
+      emit(AuthErrorStates(errorMessage: e.errorMessage));
+    } on DioException catch (e) {
+      final message = (e.error is AppException)
+          ? (e.error as AppException).errorMessage
+          : 'UnExpected error';
+      emit(AuthErrorStates(errorMessage: message));
+    }
+  }
 }
 /// view => object viewModel
 /// viewModel => object useCase

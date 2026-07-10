@@ -44,18 +44,18 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 12.h),
+          SizedBox(height: 14.h),
           _imageSliderShowAds(
             images: [AppAssets.ad1, AppAssets.ad2, AppAssets.ad3],
           ),
-          SizedBox(height: 20.h),
+          SizedBox(height: 28.h),
 
           // Categories header - static, doesn't need Cubit
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: const RowOfTextAndViewAll(name: 'Categories'),
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: 14.h),
 
           BlocBuilder<HomeScreenViewModel, HomeScreenState>(
             bloc: viewModel,
@@ -81,14 +81,14 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
 
-          SizedBox(height: 20.h),
+          SizedBox(height: 28.h),
 
           // Brands section - static for now
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: const RowOfTextAndViewAll(name: 'Brands'),
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: 14.h),
 
           BlocBuilder<HomeScreenViewModel, HomeScreenState>(
             bloc: viewModel,
@@ -114,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
 
-          SizedBox(height: 20.h),
+          SizedBox(height: 24.h),
         ],
       ),
     );
@@ -123,28 +123,40 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _imageSliderShowAds({required List<String> images}) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16.r),
-        child: ImageSlideshow(
-          width: double.infinity,
-          height: 180.h,
-          initialPage: 0,
-          indicatorColor: Colors.blue.shade900,
-          indicatorBackgroundColor: Colors.white.withValues(alpha: 0.6),
-          autoPlayInterval: 4000,
-          isLoop: true,
-          children: images
-              .map(
-                (img) => ClipRRect(
-                  borderRadius: BorderRadius.circular(16.r),
-                  child: Image.asset(
-                    img,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.10),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(18.r),
+          child: ImageSlideshow(
+            width: double.infinity,
+            height: 180.h,
+            initialPage: 0,
+            indicatorColor: Colors.blue.shade900,
+            indicatorBackgroundColor: Colors.white.withValues(alpha: 0.6),
+            autoPlayInterval: 4000,
+            isLoop: true,
+            children: images
+                .map(
+                  (img) => ClipRRect(
+                    borderRadius: BorderRadius.circular(18.r),
+                    child: Image.asset(
+                      img,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                    ),
                   ),
-                ),
-              )
-              .toList(),
+                )
+                .toList(),
+          ),
         ),
       ),
     );
@@ -161,9 +173,9 @@ class _HomeScreenState extends State<HomeScreen> {
         itemCount: categoryOrBrandList.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          mainAxisSpacing: 5.w,
+          mainAxisSpacing: 1.w,
           crossAxisSpacing: 16.h,
-          childAspectRatio: 0.68, // was 0.8 — lower value = taller cell
+          childAspectRatio: 0.75, // was 0.8 — lower value = taller cell
         ),
         itemBuilder: (context, index) {
           return ColumnOfImageAndTextInCategories(
