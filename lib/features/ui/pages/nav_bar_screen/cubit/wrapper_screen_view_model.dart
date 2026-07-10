@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../../core/utlis/app_assets .dart';
-import '../../tabs/favourite_screen.dart';
 import '../../tabs/home_screen/home_screen.dart';
 import '../../tabs/product_screen/product_screen.dart';
 import '../../tabs/profile_screen/profile_screen.dart';
+import '../../tabs/whishlist_screen/favourite_screen.dart';
 import 'wrapper_screen_states.dart'
     show WrapperScreenInitial, WrapperScreenStates, WrapperScreenIndexChanged;
 

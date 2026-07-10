@@ -9,6 +9,8 @@ import 'package:e_commerce_flutter_app/api/model/response/cart/add_cart/add_cart
 import 'package:e_commerce_flutter_app/api/model/response/cart/get_cart/get_cart_response_dto.dart';
 import 'package:e_commerce_flutter_app/api/model/response/category/category_response_dto.dart';
 import 'package:e_commerce_flutter_app/api/model/response/product/product_response_dto.dart';
+import 'package:e_commerce_flutter_app/api/model/response/whishlist/add_whish_list_response_dto.dart';
+import 'package:e_commerce_flutter_app/api/model/response/whishlist/get_whishlist/get_whish_list_response_dto.dart';
 import 'package:retrofit/retrofit.dart';
 
 import 'model/request/count_request_dto.dart';
@@ -57,4 +59,18 @@ abstract class ApiServices {
   Future<GetCartResponseDto> updateCountInCart(@Path() String productId,
       @Header('token') String token,
       @Body() CountRequestDto countRequestDto,);
+
+  @POST(EndPoints.whishListApi)
+  Future<AddWhishListResponseDto> addToWhishList(
+      @Body() AddProductRequestDto productRequest,
+      @Header('token') String token,);
+
+  @GET(EndPoints.whishListApi)
+  Future<GetWhishListResponseDto> getWhishListItemsInCart(
+      @Header('token') String token,);
+
+  @DELETE(EndPoints.deleteItemWhishListApi)
+  Future<GetWhishListResponseDto> deleteItemsInWhishList(
+      @Path() String productId,
+      @Header('token') String token,);
 }

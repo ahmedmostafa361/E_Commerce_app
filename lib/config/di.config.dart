@@ -25,6 +25,8 @@ import '../api/data_sources/remote/categories/categories_remote_data_source_impl
     as _i661;
 import '../api/data_sources/remote/products/products_remote_data_source_impl.dart'
     as _i1063;
+import '../api/data_sources/remote/whishlist/whish_list_remote_data_source_impl.dart'
+    as _i455;
 import '../api/dio/dio_module.dart' as _i223;
 import '../data/data_sources/remote/auth_remote_data_source.dart' as _i354;
 import '../data/data_sources/remote/brands_remote_data_source.dart' as _i337;
@@ -32,22 +34,29 @@ import '../data/data_sources/remote/cart_remote_data_source.dart' as _i798;
 import '../data/data_sources/remote/categories_remote_data_source.dart'
     as _i727;
 import '../data/data_sources/remote/products_remote_data_source.dart' as _i688;
+import '../data/data_sources/remote/whish_list_remote_data_source.dart'
+    as _i631;
 import '../data/repository/auth/auth_repository_impl.dart' as _i779;
 import '../data/repository/brands/brands_repository_impl.dart' as _i1059;
 import '../data/repository/cart/cart_repository_impl.dart' as _i127;
 import '../data/repository/categories/categories_repository_impl.dart' as _i142;
 import '../data/repository/products/products_repository_impl.dart' as _i996;
+import '../data/repository/whishlist/whish_list_repository_impl.dart' as _i744;
 import '../domain/repository/add_cart/cart_repository.dart' as _i909;
 import '../domain/repository/auth_repository.dart' as _i306;
 import '../domain/repository/brands/brands_repository.dart' as _i949;
 import '../domain/repository/categories/categories_repository.dart' as _i2;
 import '../domain/repository/products/products_repository.dart' as _i547;
+import '../domain/repository/whishlist/cart_repository.dart' as _i744;
 import '../domain/use_cases/add_to_cart_use_case.dart' as _i994;
+import '../domain/use_cases/add_to_whish_list_use_case.dart' as _i744;
 import '../domain/use_cases/delete_items_cart_use_case.dart' as _i701;
+import '../domain/use_cases/delete_items_whish_list_use_case.dart' as _i65;
 import '../domain/use_cases/get_all_brands_use_case.dart' as _i823;
 import '../domain/use_cases/get_all_categories_use_case.dart' as _i557;
 import '../domain/use_cases/get_all_products_use_case.dart' as _i960;
 import '../domain/use_cases/get_items_cart_use_case.dart' as _i1041;
+import '../domain/use_cases/get_items_whish_list_use_case.dart' as _i1073;
 import '../domain/use_cases/login_use_cases.dart' as _i750;
 import '../domain/use_cases/register_use_cases.dart' as _i548;
 import '../domain/use_cases/update_items_cart_use_case.dart' as _i1016;
@@ -61,6 +70,8 @@ import '../features/ui/pages/tabs/home_screen/cubit/home_screen_view_model.dart'
     as _i5;
 import '../features/ui/pages/tabs/product_screen/cubit/product_screen_view_model.dart'
     as _i393;
+import '../features/ui/pages/tabs/whishlist_screen/cubit/whish_list_view_model.dart'
+    as _i206;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -120,6 +131,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i548.RegisterUseCases>(
       () => _i548.RegisterUseCases(authRepository: gh<_i306.AuthRepository>()),
     );
+    gh.factory<_i631.WhishListRemoteDataSource>(
+      () => _i455.WhishListRemoteDataSourceImpl(
+        apiServices: gh<_i124.ApiServices>(),
+      ),
+    );
     gh.factory<_i337.BrandsRemoteDataSource>(
       () => _i948.BrandsRemoteDataSourceImpl(
         apiServices: gh<_i124.ApiServices>(),
@@ -136,6 +152,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i588.RegisterViewModel>(
       () => _i588.RegisterViewModel(
         registerUseCases: gh<_i548.RegisterUseCases>(),
+      ),
+    );
+    gh.factory<_i744.WhishListRepository>(
+      () => _i744.WhishListRepositoryImpl(
+        remoteDataSource: gh<_i631.WhishListRemoteDataSource>(),
       ),
     );
     gh.factory<_i547.ProductsRepository>(
@@ -171,6 +192,21 @@ extension GetItInjectableX on _i174.GetIt {
         categoriesRepository: gh<_i2.CategoriesRepository>(),
       ),
     );
+    gh.factory<_i744.AddToWhishlListUseCase>(
+      () => _i744.AddToWhishlListUseCase(
+        whishListRepository: gh<_i744.WhishListRepository>(),
+      ),
+    );
+    gh.factory<_i1073.GetItemsWhishListUseCase>(
+      () => _i1073.GetItemsWhishListUseCase(
+        whishListRepository: gh<_i744.WhishListRepository>(),
+      ),
+    );
+    gh.factory<_i65.DeleteItemsWhishListUseCase>(
+      () => _i65.DeleteItemsWhishListUseCase(
+        whishListRepository: gh<_i744.WhishListRepository>(),
+      ),
+    );
     gh.factory<_i960.GetAllProductsUseCase>(
       () => _i960.GetAllProductsUseCase(
         productsRepository: gh<_i547.ProductsRepository>(),
@@ -198,6 +234,13 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i5.HomeScreenViewModel(
         getAllCategoriesUseCase: gh<_i557.GetAllCategoriesUseCase>(),
         getAllBrandsUseCase: gh<_i823.GetAllBrandsUseCase>(),
+      ),
+    );
+    gh.factory<_i206.WhishListViewModel>(
+      () => _i206.WhishListViewModel(
+        addToWhishlListUseCase: gh<_i744.AddToWhishlListUseCase>(),
+        getItemsWhishListUseCase: gh<_i1073.GetItemsWhishListUseCase>(),
+        deleteItemsWhishListUseCase: gh<_i65.DeleteItemsWhishListUseCase>(),
       ),
     );
     return this;
