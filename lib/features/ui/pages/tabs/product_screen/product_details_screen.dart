@@ -13,6 +13,8 @@ import '../../../../../domain/entinties/response/products/product.dart';
 import '../../../../../widget/toast_bar_message.dart';
 import '../../cart_screen/cubit/cart_states.dart';
 import '../../cart_screen/cubit/cart_view_model.dart';
+import '../whishlist_screen/cubit/whish_list_states.dart';
+import '../whishlist_screen/cubit/whish_list_view_model.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen({super.key});
@@ -31,6 +33,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   bool _isFavourite = false;
   bool _isDescriptionExpanded = false;
 
+  bool _isFirstLoad = true;
   // TODO: replace with real data once API sends size/color options
   static const List<String> fakeSizes = ['38', '39', '40', '41', '42'];
   static const List<Color> fakeColors = [
@@ -47,9 +50,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
+
     final product = ModalRoute.of(context)!.settings.arguments as Product;
+
+    if (_isFirstLoad) {
+      final wishListViewModel = WhishListViewModel.get(context);
+      _isFavourite =
+          wishListViewModel.whishList.any((item) => item.id == product.id);
+      _isFirstLoad = false;
+    }
     final images = (product.images != null && product.images!.isNotEmpty)
         ? product.images!
         : [product.imageCover ?? ''];
@@ -75,7 +87,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 14.h),
-                    _buildImageSlider(images),
+                    _buildImageSlider(images, product),
                     SizedBox(height: 20.h),
                     _buildTitleAndPrice(product, realPrice),
                     SizedBox(height: 16.h),
@@ -101,7 +113,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   // ---------------- App bar ----------------
 
   // ---------------- Image slider ----------------
-  Widget _buildImageSlider(List<String> images) {
+  Widget _buildImageSlider(List<String> images, Product productId) {
     return Stack(
       children: [
         ClipRRect(
@@ -145,10 +157,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           top: 14.h,
           right: 14.w,
           child: GestureDetector(
-            onTap: () {
-              setState(() => _isFavourite = !_isFavourite);
-              // TODO: call favourite/wishlist use case
-            },
+            onTap: () => _toggleFavourite(productId),
+            // `productId` param is actually the Product
             child: CircleAvatar(
               radius: 22.r,
               backgroundColor: Colors.white,
@@ -189,7 +199,37 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  // ---------------- Title + price ----------------
+  Future<void> _toggleFavourite(Product product) async {
+    final productId = product.id ?? '';
+    if (productId.isEmpty) return;
+
+    final whishListViewModel = WhishListViewModel.get(context);
+
+    // ---- LIVE DELETION PATH ----
+    if (_isFavourite) {
+      setState(() => _isFavourite = false); // Optimistic UI flip
+
+      await whishListViewModel.deleteItemsWhishList(productId);
+
+      if (!mounted) return;
+      if (whishListViewModel.state is DeleteItemInWhishListErrorState) {
+        setState(() => _isFavourite = true); // Rollback on failure
+      }
+      return;
+    }
+
+    // ---- LIVE ADDITION PATH ----
+    setState(() => _isFavourite = true);
+
+    await whishListViewModel.addToWhishList(productId);
+
+    if (!mounted) return;
+
+    if (whishListViewModel.state is AddWhishListErrorState) {
+      setState(() => _isFavourite = false);
+    }
+  }
+
   Widget _buildTitleAndPrice(Product product, int realPrice) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,

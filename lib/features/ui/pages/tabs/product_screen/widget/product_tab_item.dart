@@ -3,9 +3,12 @@ import 'package:e_commerce_flutter_app/core/utlis/app_colors%20.dart';
 import 'package:e_commerce_flutter_app/core/utlis/app_text%20.dart';
 import 'package:e_commerce_flutter_app/domain/entinties/response/products/product.dart';
 import 'package:e_commerce_flutter_app/features/ui/pages/cart_screen/cubit/cart_view_model.dart';
+import 'package:e_commerce_flutter_app/features/ui/pages/tabs/whishlist_screen/cubit/whish_list_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auto_size_text/flutter_auto_size_text.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../whishlist_screen/cubit/whish_list_states.dart';
 
 class ProductTabItem extends StatefulWidget {
   final Product product;
@@ -17,9 +20,18 @@ class ProductTabItem extends StatefulWidget {
 }
 
 class _ProductTabItemState extends State<ProductTabItem> {
-  bool isFavourite =
-      false; // TODO: wire this up to real favourite logic/API later
+  late bool isFavourite; // TODO: wire this up to real favourite logic/API later
 
+
+  @override
+  void initState() {
+    super.initState();
+    final productId = widget.product.id ?? '';
+    // Check if the product is already in the fetched global wishlist
+    final wishListViewModel = WhishListViewModel.get(context);
+    isFavourite =
+        wishListViewModel.whishList.any((item) => item.id == productId);
+  }
   @override
   Widget build(BuildContext context) {
     final product = widget.product;
@@ -77,10 +89,7 @@ class _ProductTabItemState extends State<ProductTabItem> {
                   top: 8.h,
                   right: 8.w,
                   child: GestureDetector(
-                    onTap: () {
-                      setState(() => isFavourite = !isFavourite);
-                      // TODO: call favourite/wishlist use case here
-                    },
+                    onTap: _toggleFavourite,
                     child: CircleAvatar(
                       radius: 16.r,
                       backgroundColor: Colors.white,
@@ -202,5 +211,59 @@ class _ProductTabItemState extends State<ProductTabItem> {
         ],
       ),
     );
+  }
+
+  // Future<void> _toggleFavourite() async {
+  //   final productId = widget.product.id ?? '';
+  //   if (productId.isEmpty) return;
+  //
+  //   if (isFavourite) {
+  //     // TODO: call your remove-from-wishlist use case here once it's ready.
+  //     // No remove endpoint exists yet, so we just toggle the UI off for now.
+  //     setState(() => isFavourite = false);
+  //     return;
+  //   }
+  //
+  //   setState(() => isFavourite = true); // optimistic — feels instant
+  //
+  //   final whishListViewModel = WhishListViewModel.get(context);
+  //   await whishListViewModel.addToWhishList(productId);
+  //
+  //   if (!mounted) return;
+  //   if (whishListViewModel.state is AddWhishListErrorState) {
+  //     setState(() => isFavourite = false); // roll back — the API call failed
+  //   }
+  //   // Success case needs nothing else here — the screen-level BlocListener
+  //   // (added below in ProductScreen) handles the toast.
+  // }
+  Future<void> _toggleFavourite() async {
+    final productId = widget.product.id ?? '';
+    if (productId.isEmpty) return;
+
+    final whishListViewModel = WhishListViewModel.get(context);
+
+    // ---- LIVE DELETION PATH ----
+    if (isFavourite) {
+      setState(() => isFavourite = false); // Optimistic UI flip
+
+      await whishListViewModel.deleteItemsWhishList(productId);
+
+      if (!mounted) return;
+      if (whishListViewModel.state is DeleteItemInWhishListErrorState) {
+        setState(() => isFavourite = true); // Rollback on failure
+      }
+      return;
+    }
+
+    // ---- LIVE ADDITION PATH ----
+    setState(() => isFavourite = true);
+
+    await whishListViewModel.addToWhishList(productId);
+
+    if (!mounted) return;
+
+    if (whishListViewModel.state is AddWhishListErrorState) {
+      setState(() => isFavourite = false);
+    }
   }
 }

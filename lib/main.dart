@@ -12,6 +12,7 @@ import 'config/bloc_observer.dart' show MyBlocObserver;
 import 'config/di.dart';
 import 'features/ui/pages/nav_bar_screen/main_wrapper_screen.dart';
 import 'features/ui/pages/tabs/product_screen/product_details_screen.dart';
+import 'features/ui/pages/tabs/whishlist_screen/cubit/whish_list_view_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +29,8 @@ void main() async {
   runApp(MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => getIt<CartViewModel>(),),
+        BlocProvider(create: (context) => getIt<WhishListViewModel>(),),
+
       ],
       child: MyApp(routeName: routeName,)));
 }
