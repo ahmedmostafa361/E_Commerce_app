@@ -562,7 +562,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   Future<void> _handleAddToCart(BuildContext context, Product product) async {
     final cartViewModel = CartViewModel.get(context);
     await cartViewModel.addToCart(product.id ?? '');
-
+    await cartViewModel.updateItemsInCart(product.id ?? '', _quantity);
     if (!context.mounted) return;
 
     final state = cartViewModel.state;

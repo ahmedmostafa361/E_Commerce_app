@@ -59,8 +59,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Column(
               children: [
                 Padding(
-                  padding:  EdgeInsets.only(bottom: 46.h,top: 91.h,left: 96.w,right: 97.w),
-                  child: Image(image: AssetImage(AppAssets.logoECommerce)),
+                  padding: EdgeInsets.only(bottom: 50.h,
+                    top: 41.h,
+                    left: 90.w,
+                    right: 90.w,),
+                  child: Image(image: AssetImage(AppAssets.logoECommerce1)),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),

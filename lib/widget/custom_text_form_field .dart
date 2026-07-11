@@ -11,6 +11,7 @@ class CustomTextFormField extends StatelessWidget {
   final Widget? suffixIcon;
   final String? hintText;
   final String? labelText;
+  final TextStyle? style; // 1. ضفنا المتغير ده هنا للخط اللي بيتكتب
   final TextStyle? hintStyle;
   final TextStyle? labelStyle;
   final String obscuringCharacter;
@@ -18,6 +19,7 @@ class CustomTextFormField extends StatelessWidget {
   final bool obscureText;
   final TextInputType keyboardType;
   final int? maxLines;
+
   const CustomTextFormField({
     super.key,
     this.fillColor,
@@ -27,20 +29,20 @@ class CustomTextFormField extends StatelessWidget {
     this.prefixIcon,
     this.labelText,
     this.hintText,
-    this.suffixIcon,
+    this.style, // 2. مررناه جوه الـ Constructor
     this.hintStyle,
     this.labelStyle,
     this.validator,
     this.obscureText = false,
     this.keyboardType = TextInputType.text,
-    this.obscuringCharacter = '*'
+    this.obscuringCharacter = '*', this.suffixIcon
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-
-      style: Theme
+      // 3. التعديل السحري: لو بعت ستايل هيقبله، لو مبعتش هياخد الـ Theme الافتراضي بتاعك
+      style: style ?? Theme
           .of(context)
           .textTheme
           .headlineSmall,
@@ -49,7 +51,7 @@ class CustomTextFormField extends StatelessWidget {
       validator: validator,
       obscureText: obscureText,
       keyboardType: keyboardType,
-      obscuringCharacter: obscuringCharacter  ,
+      obscuringCharacter: obscuringCharacter,
       decoration: InputDecoration(
         border: outlineInputBorder(borderSideColor: borderSideColor),
         enabledBorder: outlineInputBorder(borderSideColor: borderSideColor),
@@ -61,11 +63,11 @@ class CustomTextFormField extends StatelessWidget {
         fillColor: fillColor ?? AppColors.whiteColor,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
-        filled:true,
+        filled: true,
         hintText: hintText,
         hintStyle: hintStyle ?? AppTextStyle.normal18Grey,
         labelText: labelText,
-        labelStyle: labelStyle?? AppTextStyle.normal18Grey,
+        labelStyle: labelStyle ?? AppTextStyle.normal18Grey,
       ),
     );
   }

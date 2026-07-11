@@ -17,4 +17,5 @@ class AppAssets {
   static const String ad3 = 'assets/images/ad3.png';
 
   static const String logoECommerce = 'assets/images/logoECommerce.png';
+  static const String logoECommerce1 = 'assets/images/logoECommerce1.png';
 }

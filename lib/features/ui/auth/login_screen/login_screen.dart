@@ -51,7 +51,9 @@ class _LoginScreenState extends State<LoginScreen> {
         } else if (state is AuthSuccessStates) {
           DialogUtils.hideLoading(context);
           DialogUtils.showMessage(
+
             context: context,
+            textStyle: AppTextStyle.bold16PrimaryBlue,
             message: 'success',
             title: 'welcome back',
             posActionName: 'Ok',
@@ -78,12 +80,12 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(
-                    bottom: 88.h,
-                    top: 91.h,
-                    left: 96.w,
-                    right: 97.w,
+                    bottom: 45.h,
+                    top: 10.h,
+                    left: 90.w,
+                    right: 90.w,
                   ),
-                  child: Image(image: AssetImage(AppAssets.logoECommerce)),
+                  child: Image(image: AssetImage(AppAssets.logoECommerce1)),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -93,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          'Welcome Back To Route',
+                          'Welcome Back',
                           style: AppTextStyle.title24White,
                         ),
                         SizedBox(height: 8.h),
@@ -112,6 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           hintText: 'enter your email',
                           controller: emailController,
                           validator: AppValidators.validateEmail,
+                          style: AppTextStyle.normal20Black,
                         ),
                         SizedBox(height: 32.h),
                         Text(
@@ -120,6 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         SizedBox(height: 24.h),
                         CustomTextFormField(
+                          style: AppTextStyle.normal20Black,
                           fillColor: AppColors.whiteColor,
                           hintText: 'enter your password',
                           controller: passwordController,
