@@ -1,11 +1,17 @@
 
-class RegisterRequestDto {
+class RegisterRequest {
   final String? email;
   final String? password;
+  final String? name;
+  final String? rePassword;
+  final String? phone;
 
-  RegisterRequestDto ({
+  RegisterRequest ({
     this.email,
     this.password,
+    this.name,
+    this.phone,
+    this.rePassword
   });
 
 }

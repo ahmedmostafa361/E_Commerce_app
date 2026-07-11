@@ -9,14 +9,66 @@ class AppTextStyle {
     fontSize: 24,
     fontWeight: FontWeight.w600,
   );
-
-  // Subtitle
-  static final TextStyle subtitle14Grey = GoogleFonts.poppins(
-    color: AppColors.greyColor,
-    fontSize: 14,
-    fontWeight: FontWeight.w400,
+  static final TextStyle bold16Blue = GoogleFonts.poppins(
+    color: AppColors.navy60,
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+  );
+  static final TextStyle bold18PrimaryBlue = GoogleFonts.poppins(
+    color: AppColors.primaryBlue,
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+  );
+  static final TextStyle bold16PrimaryBlue = GoogleFonts.poppins(
+    color: AppColors.primaryBlue,
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+  );
+  static final TextStyle bold28Blue = GoogleFonts.poppins(
+    color: AppColors.primaryColor,
+    fontSize: 28,
+    fontWeight: FontWeight.w700,
+  );
+  static final TextStyle bold24Blue = GoogleFonts.poppins(
+    color: AppColors.primaryColor,
+    fontSize: 24,
+    fontWeight: FontWeight.w600,
   );
 
+  static final TextStyle normal18White = GoogleFonts.poppins(
+    color: AppColors.whiteColor,
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+  );
+  static final TextStyle normal16WhitePoppins = GoogleFonts.poppins(
+    color: AppColors.whiteColor,
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+  );
+  // Subtitle
+  static final TextStyle normal18Grey = GoogleFonts.poppins(
+    color: AppColors.greyColor,
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+  );
+  static final TextStyle bold14black = GoogleFonts.poppins(
+    color: AppColors.blackColor,
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+  );
+
+  static final TextStyle normal12grey = GoogleFonts.poppins(
+    color: AppColors.greyColor,
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+  );
+  static final TextStyle strikeThrough12Grey = GoogleFonts.poppins(
+    color: AppColors.greyColor,
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    decoration: TextDecoration.lineThrough,
+    decorationColor: AppColors.greyColor,
+  );
   // Input label
   static final TextStyle label16White = GoogleFonts.poppins(
     color: AppColors.whiteColor,
@@ -32,10 +84,10 @@ class AppTextStyle {
   );
 
   // Button text
-  static final TextStyle button16Blue = GoogleFonts.poppins(
+  static final TextStyle button20Blue = GoogleFonts.poppins(
     color: AppColors.primaryBlue,
-    fontSize: 16,
-    fontWeight: FontWeight.bold,
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
   );
 
   // Nav bar & icons black70 (used in home screen)
@@ -97,6 +149,21 @@ class AppTextStyle {
     fontSize: 20,
     fontWeight: FontWeight.bold,
   );
+  static final TextStyle normal20Black = GoogleFonts.inter(
+    color: AppColors.blackColor,
+    fontSize: 20,
+    fontWeight: FontWeight.normal,
+  );
+  static final TextStyle bold20PrimaryBlue = GoogleFonts.inter(
+    color: AppColors.primaryBlue,
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+  );
+  static final TextStyle bold12PrimaryBlue = GoogleFonts.inter(
+    color: AppColors.primaryBlue,
+    fontSize: 12,
+    fontWeight: FontWeight.w600,
+  );
   static final TextStyle bold48Black = GoogleFonts.inter(
     color: AppColors.blackColor,
     fontSize: 48,
@@ -140,6 +207,11 @@ class AppTextStyle {
   static final TextStyle normal16black = GoogleFonts.inter(
     color: AppColors.blackColor,
     fontSize: 16,
+    fontWeight: FontWeight.normal,
+  );
+  static final TextStyle normal14black = GoogleFonts.inter(
+    color: AppColors.blackColor,
+    fontSize: 14,
     fontWeight: FontWeight.normal,
   );
   static final TextStyle bold14White = GoogleFonts.inter(
