@@ -17,28 +17,6 @@ class LoginViewModel extends Cubit<AuthStates>{ /// Think of Cubit as: A control
   ///todo: hold data -- handle logic
   var formKey = GlobalKey<FormState>();
 
-//  void login(String email, String password) async{/// Cubit holds business logic and controls UI state, and emit sends new states that rebuild or react in the UI(in block builder or listener states).
-//    try{
-//      if(formKey.currentState?.validate() == true){
-//        emit(AuthLoadingStates());
-//        LoginRequest loginRequest = LoginRequest(
-//            email: email,
-//            password: password
-//        );
-//        var authResponse =await loginUseCases.invoke(loginRequest);
-//        emit(AuthSuccessStates(authResponse: authResponse));
-//      }
-//    } on AppException catch(e){
-//      emit(AuthErrorStates(errorMessage: e.errorMessage));
-//    } on DioException catch(e){
-//      final message = (e.error is AppException)?
-//      (e.error as AppException).errorMessage:
-//          'UnExpected error';
-//      emit(AuthErrorStates(errorMessage: message));
-//    }
-//
-//
-// }
   void login(String email, String password) async {
     try {
       if (formKey.currentState?.validate() == true) {

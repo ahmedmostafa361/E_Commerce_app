@@ -215,11 +215,7 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  // Kept in local state (instead of switching the whole body off the Bloc
-  // state directly) so that transient loading states triggered by a single
-  // item's +/-/delete action don't blow away and re-render the entire list.
-  // Only the very first load (before we have any cart yet) shows a
-  // full-screen loading/error state.
+
   GetCart? _cart;
   String? _initialLoadError;
 
@@ -368,7 +364,7 @@ class _CartScreenState extends State<CartScreen> {
                   child: Text(
                     'EGP $totalPrice',
                     key: ValueKey<int>(totalPrice),
-                    style: AppTextStyle.bold16Blue,
+                    style: AppTextStyle.bold16PrimaryBlue,
                   ),
                 ),
               ],
@@ -382,7 +378,7 @@ class _CartScreenState extends State<CartScreen> {
                 // TODO: navigate to your checkout flow, e.g.:
                 // Navigator.of(context).pushNamed(AppRoutes.checkoutScreen);
               },
-              backgroundColor: AppColors.primaryColor,
+              backgroundColor: AppColors.primaryBlue,
               hasIcon: true,
               customInButton: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

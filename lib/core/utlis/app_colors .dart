@@ -18,7 +18,7 @@ class AppColors {
   static const Color black70 = Color(0xB2000000);
   static const Color navy60 = Color(0x9906004F);
   static const Color primaryColor = Color(
-      0xff2044D0); // main brand blue (edit icon, borders, buttons)
+      0xFF004182); // main brand blue (edit icon, borders, buttons)
   static const Color scaffoldBackgroundColor = Color(
       0xffF7F8FC); // screen background
 }

@@ -19,6 +19,11 @@ class AppTextStyle {
     fontSize: 18,
     fontWeight: FontWeight.w600,
   );
+  static final TextStyle bold16PrimaryBlue = GoogleFonts.poppins(
+    color: AppColors.primaryBlue,
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+  );
   static final TextStyle bold28Blue = GoogleFonts.poppins(
     color: AppColors.primaryColor,
     fontSize: 28,
@@ -143,6 +148,11 @@ class AppTextStyle {
     color: AppColors.blackColor,
     fontSize: 20,
     fontWeight: FontWeight.bold,
+  );
+  static final TextStyle normal20Black = GoogleFonts.inter(
+    color: AppColors.blackColor,
+    fontSize: 20,
+    fontWeight: FontWeight.normal,
   );
   static final TextStyle bold20PrimaryBlue = GoogleFonts.inter(
     color: AppColors.primaryBlue,

@@ -12,36 +12,6 @@ enum ToastType { success, error, warning, info }
 /// Where the toast appears on screen.
 enum ToastPosition { top, bottom }
 
-/// A lightweight, dependency-free toast utility built on [Overlay].
-///
-/// Works from anywhere you have a [BuildContext] — no [Scaffold] required,
-/// so it won't conflict with SnackBars, bottom nav bars, or FABs.
-///
-/// Usage:
-/// ```dart
-/// AppToast.success(context, 'Profile updated successfully');
-/// AppToast.error(context, 'Something went wrong');
-/// AppToast.warning(context, 'Please check your internet connection');
-/// AppToast.info(context, 'New update available');
-///
-/// // Or fully custom:
-/// AppToast.show(
-///   context,
-///   message: 'Custom message',
-///   type: ToastType.info,
-///   position: ToastPosition.top,
-///   duration: const Duration(seconds: 2),
-/// );
-///
-/// // Override colors for a single toast (both are nullable — omit either
-/// // one, or both, to keep the defaults):
-/// AppToast.success(
-///   context,
-///   'Item added successfully',
-///   backgroundColor: Colors.white,
-///   textColor: Colors.black,
-/// );
-/// ```
 class AppToast {
   AppToast._();
 
