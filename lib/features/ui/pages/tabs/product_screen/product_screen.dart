@@ -88,10 +88,6 @@ class _ProductScreenState extends State<ProductScreen> {
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: AppColors.whiteColor,
-        // No AppBar here on purpose — your CustomHomeAppBar already covers
-        // every tab at the MainWrapperScreen level, so this Scaffold only
-        // exists to host the `drawer`. Edge-swipe-to-open works fine
-        // without an AppBar; the menu button below is the explicit trigger.
         drawer: _buildCategoriesDrawer(),
         body: Column(
           children: [
