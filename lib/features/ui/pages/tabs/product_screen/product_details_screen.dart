@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce_flutter_app/core/utlis/app_routes%20.dart';
 import 'package:e_commerce_flutter_app/widget/custom_app_bar/custom_app_bar_cart.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auto_size_text/flutter_auto_size_text.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:readmore/readmore.dart';
 
 import '../../../../../core/cache_save_data/cart_variant_storage_for_size_color.dart';
 import '../../../../../core/utlis/app_colors .dart';
@@ -31,7 +31,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   int _selectedColorIndex =
   1; // default matches design (2nd color pre-selected)
   bool _isFavourite = false;
-  bool _isDescriptionExpanded = false;
 
   bool _isFirstLoad = true;
   // TODO: replace with real data once API sends size/color options
@@ -108,7 +107,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  // ---------------- Image slider ----------------
+  /// ---------------- Image slider ----------------
   Widget _buildImageSlider(List<String> images, Product productId) {
     return Stack(
       children: [
@@ -402,8 +401,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   // ---------------- Description ----------------
+  // Uses the `readmore` package instead of hand-rolled TextPainter
+  // measurement + TapGestureRecognizer management. The widget internally
+  // tracks its own expand/collapse state and guarantees the toggle text is
+  // never clipped by the line limit.
   Widget _buildDescription(Product product) {
     final description = product.description ?? 'No description available.';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -412,33 +416,23 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           style: AppTextStyle.bold14black.copyWith(fontSize: 20.sp),
         ),
         SizedBox(height: 8.h),
-        RichText(
-          maxLines: _isDescriptionExpanded ? null : 2,
-          overflow: _isDescriptionExpanded
-              ? TextOverflow.visible
-              : TextOverflow.ellipsis,
-          text: TextSpan(
-            style: AppTextStyle.normal12grey.copyWith(
-              fontSize: 16.sp,
-              height: 1.5,
-            ),
-            children: [
-              TextSpan(text: description),
-              TextSpan(
-                text: _isDescriptionExpanded ? '  Show less' : '  Read More',
-                style: AppTextStyle.bold14black.copyWith(
-                  fontSize: 16.sp,
-                  color: AppColors.primaryBlue,
-                ),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () {
-                    setState(
-                          () =>
-                      _isDescriptionExpanded = !_isDescriptionExpanded,
-                    );
-                  },
-              ),
-            ],
+        ReadMoreText(
+          description,
+          trimLines: 2,
+          trimMode: TrimMode.Line,
+          style: AppTextStyle.normal12grey.copyWith(
+            fontSize: 16.sp,
+            height: 1.5,
+          ),
+          trimCollapsedText: '  Read More',
+          trimExpandedText: '  Show less',
+          moreStyle: AppTextStyle.bold14black.copyWith(
+            fontSize: 16.sp,
+            color: AppColors.primaryBlue,
+          ),
+          lessStyle: AppTextStyle.bold14black.copyWith(
+            fontSize: 16.sp,
+            color: AppColors.primaryBlue,
           ),
         ),
       ],
@@ -554,10 +548,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       ],
     );
   }
-
-  // --- Add these inside _ProductDetailsScreenState, alongside your existing
-  // methods. Only the onPressed body of the button changed — everything else
-  // in your _buildBottomBar is untouched. ---
 
   Future<void> _handleAddToCart(BuildContext context, Product product) async {
     final cartViewModel = CartViewModel.get(context);
