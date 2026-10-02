@@ -1,0 +1,59 @@
+name: Add iOS widget extension (test)
+
+# Runs automatically on every push to the widget-test branch.
+on:
+  push:
+    branches: [widget-test]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  add-widget:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          # Put the same version you get from `flutter --version` on your machine.
+          flutter-version: '3.35.7'
+          channel: stable
+          cache: true
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+
+      - name: Install xcodeproj
+        run: gem install xcodeproj --no-document
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Add widget target
+        run: ruby scripts/add_widget_target.rb
+
+      - name: Verify iOS build (no signing)
+        run: flutter build ios --release --no-codesign
+
+      - name: Package unsigned IPA (for Sideloadly)
+        run: |
+          cd build/ios/iphoneos
+          mkdir -p Payload
+          cp -R Runner.app Payload/
+          zip -qr "$GITHUB_WORKSPACE/app-unsigned.ipa" Payload
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-unsigned-ipa
+          path: app-unsigned.ipa
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ios/Runner.xcodeproj ios/ZakiratiWidget ios/Runner
+          git commit -m "Add ZakiratiWidget iOS extension" || echo "No changes to commit"
+          git push
