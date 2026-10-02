@@ -13,7 +13,8 @@ class CustomElevatedButton extends StatelessWidget {
   final bool hasIcon;
   final Widget? customInButton;
   final EdgeInsetsGeometry? padding;
-  CustomElevatedButton({
+
+  const CustomElevatedButton({
     super.key,
     this.customInButton,
     this.hasIcon = false,

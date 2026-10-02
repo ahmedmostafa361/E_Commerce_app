@@ -11,7 +11,7 @@ class CustomTextFormField extends StatelessWidget {
   final Widget? suffixIcon;
   final String? hintText;
   final String? labelText;
-  final TextStyle? style; // 1. ضفنا المتغير ده هنا للخط اللي بيتكتب
+  final TextStyle? style;
   final TextStyle? hintStyle;
   final TextStyle? labelStyle;
   final String obscuringCharacter;
@@ -29,7 +29,7 @@ class CustomTextFormField extends StatelessWidget {
     this.prefixIcon,
     this.labelText,
     this.hintText,
-    this.style, // 2. مررناه جوه الـ Constructor
+    this.style,
     this.hintStyle,
     this.labelStyle,
     this.validator,
@@ -41,7 +41,6 @@ class CustomTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      // 3. التعديل السحري: لو بعت ستايل هيقبله، لو مبعتش هياخد الـ Theme الافتراضي بتاعك
       style: style ?? Theme
           .of(context)
           .textTheme
